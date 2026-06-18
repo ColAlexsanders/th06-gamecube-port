@@ -1,4 +1,4 @@
-[submodule "source/game"]
-	path = source/game
+[submodule "source/game/original"]
+	path = source/game/original
 	url = https://github.com/GensokyoClub/th06
 	branch = portable
