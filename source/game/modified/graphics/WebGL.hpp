@@ -2,7 +2,6 @@
 
 #include "GLFunc.hpp"
 #include "GfxInterface.hpp"
-#include <SDL2/SDL.h>
 #include <vector>
 
 enum GlShaderUniform
@@ -70,8 +69,9 @@ struct WebGL : GfxInterface
     virtual void SwapBuffers();
 
   private:
-    SDL_Window *window;
-    SDL_GLContext glContext;
+    // GameCube uses GX backend, these are stubs
+    void *window;
+    void *glContext;
     bool glesContext;
 
     GLuint fragmentShaderHandle;

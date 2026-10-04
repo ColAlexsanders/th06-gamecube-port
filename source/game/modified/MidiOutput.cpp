@@ -5,44 +5,31 @@
 #include "i18n.hpp"
 #include "inttypes.hpp"
 #include "utils.hpp"
+#include "platform.h"
 
-#include <SDL2/SDL_endian.h>
 #include <cstdlib>
 #include <cstring>
 
-void MidiOutput::StartTimer(u32 delay, SDL_TimerCallback cb, void *data)
+void MidiOutput::StartTimer(u32 delay, void (*cb)(void *), void *data)
 {
     this->StopTimer();
 
-    this->lastTimerTicks = SDL_GetTicks();
+    this->lastTimerTicks = platform_getTicks();
 
     if (cb != NULL)
     {
-        this->timerId = SDL_AddTimer(delay, cb, data);
+        // Timer stub - no actual timer implementation yet
+        // this->timerId = SDL_AddTimer(delay, cb, data);
     }
     else
     {
-        this->timerId = SDL_AddTimer(delay, (SDL_TimerCallback)&MidiOutput::DefaultTimerCallback, this);
+        // this->timerId = SDL_AddTimer(delay, (SDL_TimerCallback)&MidiOutput::DefaultTimerCallback, this);
     }
 }
 
 i32 MidiOutput::StopTimer()
 {
-    if (this->timerId != 0)
-    {
-        SDL_RemoveTimer(this->timerId);
-    }
-
-    this->timerId = 0;
-
     return 1;
-}
-
-u32 SDLCALL MidiOutput::DefaultTimerCallback(u32 interval, MidiOutput *timer)
-{
-    timer->OnTimerElapsed();
-
-    return interval; // Reschedules with same interval
 }
 
 u32 MidiOutput::ReadVariableLength(u8 **curTrackDataCursor)
@@ -63,7 +50,7 @@ u32 MidiOutput::ReadVariableLength(u8 **curTrackDataCursor)
 
 MidiOutput::MidiOutput()
 {
-    this->timerId = 0;
+    this->lastTimerTicks = 0;
 
     this->tracks = NULL;
     this->divisions = 0;
@@ -161,7 +148,10 @@ ZunResult MidiOutput::ParseFile(i32 fileIdx)
 
     // Get a pointer to the end of the header chunk
     currentCursor += sizeof(hdrRaw);
-    hdrLength = SDL_SwapBE32(*(u32 *)(hdrRaw + 4));
+    // MIDI files are big-endian, GameCube is little-endian
+    // These need to be swapped
+    hdrLength = ((*(u32 *)(hdrRaw + 4) >> 24) & 0xFF) | ((*(u32 *)(hdrRaw + 4) >> 8) & 0xFF00) |
+                ((*(u32 *)(hdrRaw + 4) << 8) & 0xFF0000) | ((*(u32 *)(hdrRaw + 4) << 24) & 0xFF000000);
 
     endOfHeaderPointer = currentCursor;
     currentCursor += hdrLength;
@@ -172,13 +162,13 @@ ZunResult MidiOutput::ParseFile(i32 fileIdx)
     //  sequence
     //  2: the file contains one or more sequentially independent single-track
     //  patterns
-    this->format = SDL_SwapBE16(*(u16 *)endOfHeaderPointer);
+    this->format = ((*(u16 *)endOfHeaderPointer >> 8) & 0xFF) | ((*(u16 *)endOfHeaderPointer << 8) & 0xFF00);
 
     // Read the divisions in this track. Note that this doesn't appear to support
     // "negative SMPTE format", which happens when the MSB is set.
-    this->divisions = SDL_SwapBE16(*(u16 *)(endOfHeaderPointer + 4));
+    this->divisions = ((*(u16 *)(endOfHeaderPointer + 4) >> 8) & 0xFF) | ((*(u16 *)(endOfHeaderPointer + 4) << 8) & 0xFF00);
     // Read the number of tracks in this midi file.
-    this->numTracks = SDL_SwapBE16(*(u16 *)(endOfHeaderPointer + 2));
+    this->numTracks = ((*(u16 *)(endOfHeaderPointer + 2) >> 8) & 0xFF) | ((*(u16 *)(endOfHeaderPointer + 2) << 8) & 0xFF00);
 
     // Allocate this->divisions * 32 bytes.
     this->tracks = (MidiTrack *)ZunMemory::Alloc(sizeof(MidiTrack) * this->numTracks);
@@ -191,7 +181,8 @@ ZunResult MidiOutput::ParseFile(i32 fileIdx)
         // Read a track (MTrk) chunk.
         //
         // First, read the length of the chunk
-        trackLength = SDL_SwapBE32(*(u32 *)(currentCursorTrack + 4));
+        trackLength = ((*(u32 *)(currentCursorTrack + 4) >> 24) & 0xFF) | ((*(u32 *)(currentCursorTrack + 4) >> 8) & 0xFF00) |
+                      ((*(u32 *)(currentCursorTrack + 4) << 8) & 0xFF0000) | ((*(u32 *)(currentCursorTrack + 4) << 24) & 0xFF000000);
         this->tracks[trackIdx].trackLength = trackLength;
         this->tracks[trackIdx].trackData = (u8 *)ZunMemory::Alloc(trackLength);
         this->tracks[trackIdx].trackPlaying = 1;
@@ -280,57 +271,9 @@ u32 MidiOutput::SetFadeOut(u32 ms)
 //   delta from SDL_GetTicks instead.
 void MidiOutput::OnTimerElapsed()
 {
-    u64 timePos;
-    i32 trackIndex;
-    bool trackLoaded;
-
-    trackLoaded = false;
-    timePos = this->tickBase + (this->elapsedMS * this->divisions * 1000) / this->tempo;
-    if (this->fadeOutFlag)
-    {
-        if (this->fadeOutElapsedMS < this->fadeOutInterval)
-        {
-            this->fadeOutVolumeMultiplier = 1.0f - (f32)this->fadeOutElapsedMS / (f32)this->fadeOutInterval;
-            if ((u32)(this->fadeOutVolumeMultiplier * 128.0f) != this->fadeOutLastSetVolume)
-            {
-                this->FadeOutSetVolume(0);
-            }
-            this->fadeOutLastSetVolume = this->fadeOutVolumeMultiplier * 128.0f;
-            this->fadeOutElapsedMS = this->fadeOutElapsedMS + 1;
-        }
-        else
-        {
-            this->fadeOutVolumeMultiplier = 0.0;
-            return;
-        }
-    }
-
-    for (trackIndex = 0; trackIndex < this->numTracks; trackIndex++)
-    {
-        if (this->tracks[trackIndex].trackPlaying)
-        {
-            trackLoaded = true;
-            while (this->tracks[trackIndex].trackPlaying)
-            {
-                if (this->tracks[trackIndex].nextMessageTimePos <= timePos)
-                {
-                    this->ProcessMsg(&this->tracks[trackIndex]);
-                    timePos = this->tickBase + (this->elapsedMS * this->divisions * 1000 / this->tempo);
-                    continue;
-                }
-                break;
-            }
-        }
-    }
-
-    u32 curTicks = SDL_GetTicks();
-    this->elapsedMS += curTicks - this->lastTimerTicks;
-    this->lastTimerTicks = curTicks;
-
-    if (!trackLoaded)
-    {
-        this->LoadTracks();
-    }
+    // GameCube stub - no SDL timer support
+    // The full implementation would need a proper timer system
+    (void)this;
 }
 
 void MidiOutput::ProcessMsg(MidiTrack *track)
@@ -436,7 +379,7 @@ void MidiOutput::ProcessMsg(MidiTrack *track)
             break;
         }
 
-        SDL_FALLTHROUGH;
+        // Fall through to MIDI_OPCODE_NOTE_OFF
     case MIDI_OPCODE_NOTE_OFF:
         this->channels[opcodeLow].keyPressedFlags[arg1 >> 3] &= ~(ZUN_BIT(arg1 & 7));
         break;

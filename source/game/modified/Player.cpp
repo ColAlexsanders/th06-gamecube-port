@@ -230,7 +230,7 @@ ChainCallbackResult Player::OnUpdate(Player *p)
             p->playerSprite.scaleY = 3.0f * scaleFactor1 + 1.0f;
             p->playerSprite.scaleX = 1.0f - 1.0f * scaleFactor1;
             p->playerSprite.color =
-                COLOR_SET_ALPHA(COLOR_WHITE, (u32)(255.0f - p->invulnerabilityTimer.AsFramesFloat() * 255.0f / 30.0f));
+                TH06_COLOR_SET_ALPHA(TH06_COLOR_WHITE, (u32)(255.0f - p->invulnerabilityTimer.AsFramesFloat() * 255.0f / 30.0f));
             p->playerSprite.flags.blendMode = AnmVmBlendMode_One;
             p->previousHorizontalSpeed = 0.0f;
             p->previousVerticalSpeed = 0.0f;
@@ -276,14 +276,14 @@ ChainCallbackResult Player::OnUpdate(Player *p)
         p->playerSprite.flags.blendMode = AnmVmBlendMode_One;
         p->verticalMovementSpeedMultiplierDuringBomb = 1.0;
         p->horizontalMovementSpeedMultiplierDuringBomb = 1.0;
-        p->playerSprite.color = COLOR_SET_ALPHA(COLOR_WHITE, p->invulnerabilityTimer.AsFrames() * 255 / 30);
+        p->playerSprite.color = TH06_COLOR_SET_ALPHA(TH06_COLOR_WHITE, p->invulnerabilityTimer.AsFrames() * 255 / 30);
         p->respawnTimer = 0;
         if (30 <= p->invulnerabilityTimer.AsFrames())
         {
             p->playerState = PLAYER_STATE_INVULNERABLE;
             p->playerSprite.scaleX = 1.0;
             p->playerSprite.scaleY = 1.0;
-            p->playerSprite.color = COLOR_WHITE;
+            p->playerSprite.color = TH06_COLOR_WHITE;
             p->playerSprite.flags.blendMode = AnmVmBlendMode_InvSrcAlpha;
             p->invulnerabilityTimer.SetCurrent(240);
             p->respawnTimer = 6;
@@ -302,7 +302,7 @@ ChainCallbackResult Player::OnUpdate(Player *p)
             p->playerState = PLAYER_STATE_ALIVE;
             p->invulnerabilityTimer.SetCurrent(0);
             p->playerSprite.flags.colorOp = AnmVmColorOp_Modulate;
-            p->playerSprite.color = COLOR_WHITE;
+            p->playerSprite.color = TH06_COLOR_WHITE;
         }
         else if (p->invulnerabilityTimer.AsFrames() % 8 < 2)
         {
@@ -312,7 +312,7 @@ ChainCallbackResult Player::OnUpdate(Player *p)
         else
         {
             p->playerSprite.flags.colorOp = AnmVmColorOp_Modulate;
-            p->playerSprite.color = COLOR_WHITE;
+            p->playerSprite.color = TH06_COLOR_WHITE;
         }
     }
     else
@@ -409,7 +409,7 @@ i32 Player::CalcDamageToEnemy(const ZunVec3 *enemyPos, const ZunVec3 *enemyHitbo
             }
             if (bullet->unk_140.AsFrames() % 6 == 0)
             {
-                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bullet->position, 1, COLOR_WHITE);
+                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bullet->position, 1, TH06_COLOR_WHITE);
             }
         }
 
@@ -418,7 +418,7 @@ i32 Player::CalcDamageToEnemy(const ZunVec3 *enemyPos, const ZunVec3 *enemyHitbo
             if (bullet->bulletState == BULLET_STATE_FIRED)
             {
                 g_AnmManager->SetAndExecuteScriptIdx(&bullet->sprite, bullet->sprite.anmFileIndex + 0x20);
-                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bullet->position, 1, COLOR_WHITE);
+                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bullet->position, 1, TH06_COLOR_WHITE);
                 bullet->position.z = 0.1;
             }
             bullet->bulletState = BULLET_STATE_COLLIDED;
@@ -433,7 +433,7 @@ i32 Player::CalcDamageToEnemy(const ZunVec3 *enemyPos, const ZunVec3 *enemyHitbo
                 bulletTopLeft = *enemyPos;
                 bulletTopLeft.x = bullet->position.x;
 
-                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bulletTopLeft, 1, COLOR_WHITE);
+                g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_5, &bulletTopLeft, 1, TH06_COLOR_WHITE);
             }
         }
     }
@@ -456,7 +456,7 @@ i32 Player::CalcDamageToEnemy(const ZunVec3 *enemyPos, const ZunVec3 *enemyHitbo
         this->unk_9e4++;
         if (this->unk_9e4 % 4 == 0)
         {
-            g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_3, enemyPos, 1, COLOR_WHITE);
+            g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_3, enemyPos, 1, TH06_COLOR_WHITE);
         }
         if (this->bombInfo.isInUse && hitWithLazerDuringBomb)
         {
@@ -1384,7 +1384,7 @@ void Player::ScoreGraze(const ZunVec3 *center) const
     }
 
     particlePosition = (this->positionCenter + *center) / 2.0f;
-    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_8, &particlePosition, 1, COLOR_WHITE);
+    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_8, &particlePosition, 1, TH06_COLOR_WHITE);
     g_GameManager.AddScore(500);
     g_GameManager.IncreaseSubrank(6);
     g_Gui.flags.flag3 = 2;
@@ -1396,8 +1396,8 @@ void Player::Die()
     int curLaserTimerIdx;
 
     g_EnemyManager.spellcardInfo.isCapturing = 0;
-    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &this->positionCenter, 1, COLOR_NEONBLUE);
-    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_6, &this->positionCenter, 16, COLOR_WHITE);
+    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &this->positionCenter, 1, TH06_COLOR_NEONBLUE);
+    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_6, &this->positionCenter, 16, TH06_COLOR_WHITE);
     this->playerState = PLAYER_STATE_DEAD;
     this->invulnerabilityTimer.InitializeForPopup();
     g_SoundPlayer.PlaySoundByIdx(SOUND_PICHUN);

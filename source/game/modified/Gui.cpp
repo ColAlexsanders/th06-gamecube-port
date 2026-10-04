@@ -91,7 +91,7 @@ ChainCallbackResult Gui::OnDraw(Gui *gui)
         stringPos.x = GAME_REGION_LEFT + 42.0f;
         stringPos.y = GAME_REGION_TOP + 112.0f;
         stringPos.z = 0.0;
-        g_AsciiManager.color = COLOR_SUNSHINEYELLOW;
+        g_AsciiManager.color = TH06_COLOR_SUNSHINEYELLOW;
         if (g_GameManager.currentStage < EXTRA_STAGE)
         {
             g_AsciiManager.AddFormatText(&stringPos, "Stage Clear\n\n");
@@ -102,25 +102,25 @@ ChainCallbackResult Gui::OnDraw(Gui *gui)
         }
 
         stringPos.y += 32.0f;
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
         g_AsciiManager.AddFormatText(&stringPos, "Stage * 1000 = %5d\n", g_GameManager.currentStage * 1000);
 
         stringPos.y += 16.0f;
-        g_AsciiManager.color = COLOR_LAVENDER;
+        g_AsciiManager.color = TH06_COLOR_LAVENDER;
         g_AsciiManager.AddFormatText(&stringPos, "Power *  100 = %5d\n", g_GameManager.currentPower * 100);
 
         stringPos.y += 16.0f;
-        g_AsciiManager.color = COLOR_LIGHTBLUE;
+        g_AsciiManager.color = TH06_COLOR_LIGHTBLUE;
         g_AsciiManager.AddFormatText(&stringPos, "Graze *   10 = %5d\n", g_GameManager.grazeInStage * 10);
 
         stringPos.y += 16.0f;
-        g_AsciiManager.color = COLOR_LIGHT_RED;
+        g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
         g_AsciiManager.AddFormatText(&stringPos, "    * Point Item %3d\n", g_GameManager.pointItemsCollectedInStage);
 
         if (EXTRA_STAGE <= g_GameManager.currentStage)
         {
             stringPos.y += 16.0f;
-            g_AsciiManager.color = COLOR_LIGHTYELLOW;
+            g_AsciiManager.color = TH06_COLOR_LIGHTYELLOW;
             g_AsciiManager.AddFormatText(&stringPos, "Player    = %8d\n", g_GameManager.livesRemaining * 3000000);
             stringPos.y += 16.0f;
             g_AsciiManager.AddFormatText(&stringPos, "Bomb      = %8d\n", g_GameManager.bombsRemaining * 1000000);
@@ -130,23 +130,23 @@ ChainCallbackResult Gui::OnDraw(Gui *gui)
         switch (g_GameManager.difficulty)
         {
         case EASY:
-            g_AsciiManager.color = COLOR_LIGHT_RED;
+            g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             g_AsciiManager.AddFormatText(&stringPos, "Easy Rank      * 0.5\n");
             break;
         case NORMAL:
-            g_AsciiManager.color = COLOR_LIGHT_RED;
+            g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             g_AsciiManager.AddFormatText(&stringPos, "Normal Rank    * 1.0\n");
             break;
         case HARD:
-            g_AsciiManager.color = COLOR_LIGHT_RED;
+            g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             g_AsciiManager.AddFormatText(&stringPos, "Hard Rank      * 1.2\n");
             break;
         case LUNATIC:
-            g_AsciiManager.color = COLOR_LIGHT_RED;
+            g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             g_AsciiManager.AddFormatText(&stringPos, "Lunatic Rank   * 1.5\n");
             break;
         case EXTRA:
-            g_AsciiManager.color = COLOR_LIGHT_RED;
+            g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             g_AsciiManager.AddFormatText(&stringPos, "Extra Rank     * 2.0\n");
             break;
         }
@@ -157,20 +157,20 @@ ChainCallbackResult Gui::OnDraw(Gui *gui)
             switch (g_Supervisor.defaultConfig.lifeCount)
             {
             case 3:
-                g_AsciiManager.color = COLOR_LIGHT_RED;
+                g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
                 g_AsciiManager.AddFormatText(&stringPos, "Player Penalty * 0.5\n");
                 stringPos.y += 16.0f;
                 break;
             case 4:
-                g_AsciiManager.color = COLOR_LIGHT_RED;
+                g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
                 g_AsciiManager.AddFormatText(&stringPos, "Player Penalty * 0.2\n");
                 stringPos.y += 16.0f;
                 break;
             }
         }
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
         g_AsciiManager.AddFormatText(&stringPos, "Total     = %8d", gui->impl->stageScore);
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
     }
 
     gui->impl->DrawDialogue();
@@ -179,20 +179,20 @@ ChainCallbackResult Gui::OnDraw(Gui *gui)
     g_AsciiManager.isGui = 1;
     if (gui->impl->bonusScore.isShown)
     {
-        g_AsciiManager.color = COLOR_LIGHTYELLOW;
+        g_AsciiManager.color = TH06_COLOR_LIGHTYELLOW;
         g_AsciiManager.AddFormatText(&gui->impl->bonusScore.pos, "BONUS %8d", gui->impl->bonusScore.fmtArg);
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
     }
     if (gui->impl->fullPowerMode.isShown)
     {
-        g_AsciiManager.color = COLOR_PALEBLUE;
+        g_AsciiManager.color = TH06_COLOR_PALEBLUE;
         g_AsciiManager.AddFormatText(&gui->impl->fullPowerMode.pos, "Full Power Mode!!",
                                      gui->impl->fullPowerMode.fmtArg);
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
     }
     if (gui->impl->spellCardBonus.isShown)
     {
-        g_AsciiManager.color = COLOR_RED;
+        g_AsciiManager.color = TH06_COLOR_RED;
 
         gui->impl->spellCardBonus.pos.x =
             ((f32)GAME_REGION_WIDTH - (f32)std::strlen("Spell Card Bonus!") * 16.0f) / 2.0f + (f32)GAME_REGION_LEFT;
@@ -205,12 +205,12 @@ ChainCallbackResult Gui::OnDraw(Gui *gui)
             ((f32)GAME_REGION_WIDTH - (f32)std::strlen(spellCardBonusStr) * 32.0f) / 2.0f + (f32)GAME_REGION_LEFT;
         g_AsciiManager.scale.x = 2.0f;
         g_AsciiManager.scale.y = 2.0f;
-        g_AsciiManager.color = COLOR_LIGHT_RED;
+        g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
         g_AsciiManager.AddString(&gui->impl->spellCardBonus.pos, spellCardBonusStr);
 
         g_AsciiManager.scale.x = 1.0;
         g_AsciiManager.scale.y = 1.0;
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
     }
     g_AsciiManager.isGui = 0;
     g_AnmManager->SetDepthFunc(DEPTH_FUNC_LEQUAL);
@@ -234,7 +234,7 @@ void Gui::ShowSpellcard(i32 spellcardSprite, const char *spellcardName)
     g_AnmManager->SetAndExecuteScriptIdx(&this->impl->enemySpellcardPortrait, ANM_SCRIPT_FACE_ENEMY_SPELLCARD_PORTRAIT);
     g_AnmManager->SetActiveSprite(&this->impl->enemySpellcardPortrait, ANM_SPRITE_FACE_STAGE_START + spellcardSprite);
     g_AnmManager->SetAndExecuteScriptIdx(&this->impl->enemySpellcardName, ANM_SCRIPT_TEXT_ENEMY_SPELLCARD_NAME);
-    g_AnmManager->DrawStringFormat(&this->impl->enemySpellcardName, 0xfff0f0, COLOR_RGB(COLOR_BLACK), spellcardName);
+    g_AnmManager->DrawStringFormat(&this->impl->enemySpellcardName, 0xfff0f0, TH06_COLOR_RGB(TH06_COLOR_BLACK), spellcardName);
     this->blueSpellcardBarLength = std::strlen(spellcardName) * 15 / 2.0f + 16.0f;
     g_SoundPlayer.PlaySoundByIdx(SOUND_BOMB);
     return;
@@ -436,11 +436,11 @@ ZunResult Gui::ActualAddedCallback()
     this->impl->enemySpellcardName.fontHeight = 15;
     g_AnmManager->SetAndExecuteScriptIdx(&this->impl->stageNameSprite, ANM_SCRIPT_TEXT_STAGE_NAME);
     g_AnmManager->SetAndExecuteScriptIdx(&this->impl->songNameSprite, ANM_SCRIPT_TEXT_SONG_NAME);
-    g_AnmManager->DrawStringFormat2(&this->impl->stageNameSprite, COLOR_RGB(COLOR_LIGHTCYAN), COLOR_RGB(COLOR_BLACK),
+    g_AnmManager->DrawStringFormat2(&this->impl->stageNameSprite, TH06_COLOR_RGB(TH06_COLOR_LIGHTCYAN), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                     g_Stage.stdData->stageName);
     this->impl->songNameSprite.fontWidth = 16;
     this->impl->songNameSprite.fontHeight = 16;
-    g_AnmManager->DrawStringFormat(&this->impl->songNameSprite, COLOR_RGB(COLOR_LIGHTCYAN), COLOR_RGB(COLOR_BLACK),
+    g_AnmManager->DrawStringFormat(&this->impl->songNameSprite, TH06_COLOR_RGB(TH06_COLOR_LIGHTCYAN), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                    TH_SONG_NAME, g_Stage.stdData->songNames[0]);
     this->impl->msg.currentMsgIdx = 0xffffffff;
     this->impl->finishedStage = 0;
@@ -515,8 +515,8 @@ void GuiImpl::MsgRead(i32 msgIdx)
     this->msg.dialogueLines[0].anmFileIndex = -1;
     this->msg.dialogueLines[1].anmFileIndex = -1;
     this->msg.fontSize = 15;
-    this->msg.textColorsA[0] = COLOR_RGB(COLOR_GUI_1);
-    this->msg.textColorsA[1] = COLOR_RGB(COLOR_GUI_2);
+    this->msg.textColorsA[0] = TH06_COLOR_RGB(TH06_COLOR_GUI_1);
+    this->msg.textColorsA[1] = TH06_COLOR_RGB(TH06_COLOR_GUI_2);
     this->msg.textColorsB[0] = 0;
     this->msg.textColorsB[1] = 0;
     this->msg.dialogueSkippable = 1;
@@ -617,7 +617,7 @@ ZunResult GuiImpl::RunMsg()
             g_AnmManager->SetAndExecuteScriptIdx(&this->songNameSprite, 0x701);
             this->songNameSprite.fontWidth = 16;
             this->songNameSprite.fontHeight = 16;
-            g_AnmManager->DrawStringFormat(&this->songNameSprite, COLOR_RGB(COLOR_LIGHTCYAN), COLOR_RGB(COLOR_BLACK),
+            g_AnmManager->DrawStringFormat(&this->songNameSprite, TH06_COLOR_RGB(TH06_COLOR_LIGHTCYAN), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                            TH_SONG_NAME,
                                            g_Stage.stdData->songNames[this->msg.currentInstr->args.music]);
             if (g_Supervisor.PlayMidiFile(this->msg.currentInstr->args.music) != ZUN_SUCCESS)
@@ -1056,7 +1056,7 @@ void Gui::DrawGameScene()
             g_SoundPlayer.PlaySoundByIdx(SOUND_1D);
         }
         g_AsciiManager.AddFormatText(&textPos, "%.2d", cappedSpellcardSecondsRemaining);
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
         this->lastSpellcardSecondsRemaining = this->spellcardSecondsRemaining;
     }
     g_Supervisor.viewport.x = 0;
@@ -1294,7 +1294,7 @@ void Gui::DrawStageElements() const
             g_AnmManager->Draw2(&this->impl->stageNameSprite);
 
             // this looks like an inline function, maybe ZunColor is a struct?
-            stageTextColor = COLOR_COMBINE_ALPHA(COLOR_SUNSHINEYELLOW, this->impl->stageNameSprite.color);
+            stageTextColor = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_SUNSHINEYELLOW, this->impl->stageNameSprite.color);
             g_AsciiManager.color = stageTextColor;
 
             if (g_GameManager.currentStage < EXTRA_STAGE)
@@ -1315,14 +1315,14 @@ void Gui::DrawStageElements() const
         }
         else
         {
-            demoTextColor = COLOR_COMBINE_ALPHA(COLOR_SUNSHINEYELLOW, this->impl->stageNameSprite.color);
+            demoTextColor = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_SUNSHINEYELLOW, this->impl->stageNameSprite.color);
             g_AsciiManager.color = demoTextColor;
 
             stageTextPos.x = 136.0f;
 
             g_AsciiManager.AddFormatText(&stageTextPos, " DEMO PLAY");
         }
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
     }
 
     if (this->impl->songNameSprite.flags.isVisible && !g_GameManager.demoMode)

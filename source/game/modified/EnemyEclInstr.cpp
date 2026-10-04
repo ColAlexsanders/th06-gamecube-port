@@ -414,7 +414,7 @@ void ExInsCirnoRainbowBallJank(Enemy *enemy, EclRawInstr *instr)
     currentBullet = g_BulletManager.bullets;
     effectIndex = instr->args.exInstr.i32Param;
 
-    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, COLOR_WHITE);
+    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, TH06_COLOR_WHITE);
     for (i = 0; i < ARRAY_SIZE_SIGNED(g_BulletManager.bullets); i++, currentBullet++)
     {
         if (currentBullet->state == 0 || currentBullet->state == 5)
@@ -544,7 +544,7 @@ void ExInsStage56Func4(Enemy *enemy, EclRawInstr *instr)
 
     if (instr->args.exInstr.i32Param < 2)
     {
-        g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, COLOR_WHITE);
+        g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, TH06_COLOR_WHITE);
         g_GameManager.isTimeStopped = instr->args.exInstr.u8Param;
     }
     else
@@ -753,7 +753,7 @@ void ExInsStage6XFunc6(Enemy *enemy, EclRawInstr *instr)
         particlePos = enemy->position;
         particlePos.x += ZUN_COSF(finalAngle) * distanceModifier;
         particlePos.y += ZUN_SINF(finalAngle) * distanceModifier;
-        effect = g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_19, &particlePos, 1, COLOR_DEEPBLUE);
+        effect = g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_19, &particlePos, 1, TH06_COLOR_DEEPBLUE);
         effect->unk_11c.x = (g_Rng.GetRandomF32ZeroToOne() * 40.0f - 20.0f) / 60.0f;
         effect->unk_11c.y = (8.0f * baseAngleModifier) / 60.0f - (4.0f / 15.0f);
         effect->unk_11c.z = 0.0;
@@ -762,7 +762,7 @@ void ExInsStage6XFunc6(Enemy *enemy, EclRawInstr *instr)
         particlePos = enemy->position;
         particlePos.x -= ZUN_COSF(finalAngle) * distanceModifier;
         particlePos.y += ZUN_SINF(finalAngle) * distanceModifier;
-        effect = g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_19, &particlePos, 1, COLOR_DEEPBLUE);
+        effect = g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_19, &particlePos, 1, TH06_COLOR_DEEPBLUE);
         effect->unk_11c.x = (g_Rng.GetRandomF32ZeroToOne() * 40.0f - 20.0f) / 60.0f;
         effect->unk_11c.y = (8.0f * baseAngleModifier) / 60.0f - (4.0f / 15.0f);
         effect->unk_11c.z = 0.0;
@@ -937,7 +937,7 @@ void ExInsStage6Func9(Enemy *enemy, EclRawInstr *instr)
     EnemyBulletShooter unusedBulletProps;
 
     randomAngleModifier = g_Rng.GetRandomF32InRange(ZUN_PI * 2) - ZUN_PI;
-    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, COLOR_WHITE);
+    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, TH06_COLOR_WHITE);
 
     for (i = 0; i < ARRAY_SIZE_SIGNED(g_BulletManager.bullets); i++, currentBullet++)
     {
@@ -983,7 +983,7 @@ void ExInsStage6Func11(Enemy *enemy, EclRawInstr *instr)
     EnemyBulletShooter unusedBulletProps;
 
     unusedRandomNumber = g_Rng.GetRandomF32InRange(ZUN_PI * 2) - ZUN_PI;
-    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, COLOR_WHITE);
+    g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &enemy->position, 1, TH06_COLOR_WHITE);
 
     for (i = 0; i < ARRAY_SIZE_SIGNED(g_BulletManager.bullets); i++, currentBullet++)
     {

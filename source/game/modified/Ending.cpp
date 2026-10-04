@@ -51,20 +51,20 @@ void Ending::FadingEffect()
         else
         {
             color = 255 - this->timeFading * 255 / this->fadeFrames;
-            this->endingFadeColor = COLOR_SET_ALPHA(COLOR_BLACK, color);
+            this->endingFadeColor = TH06_COLOR_SET_ALPHA(TH06_COLOR_BLACK, color);
             this->timeFading++;
             break;
         }
     case ENDING_FADE_TYPE_FADE_OUT_BLACK:
         if (this->timeFading >= this->fadeFrames)
         {
-            this->endingFadeColor = COLOR_BLACK;
+            this->endingFadeColor = TH06_COLOR_BLACK;
             break;
         }
         else
         {
             color = this->timeFading * 255 / this->fadeFrames;
-            this->endingFadeColor = COLOR_SET_ALPHA(COLOR_BLACK, color);
+            this->endingFadeColor = TH06_COLOR_SET_ALPHA(TH06_COLOR_BLACK, color);
             this->timeFading++;
             break;
         }
@@ -78,20 +78,20 @@ void Ending::FadingEffect()
         else
         {
             color = 255 - this->timeFading * 255 / this->fadeFrames;
-            this->endingFadeColor = COLOR_SET_ALPHA(COLOR_WHITE, color);
+            this->endingFadeColor = TH06_COLOR_SET_ALPHA(TH06_COLOR_WHITE, color);
             this->timeFading++;
             break;
         }
     case ENDING_FADE_TYPE_FADE_OUT_WHITE:
         if (this->timeFading >= this->fadeFrames)
         {
-            this->endingFadeColor = COLOR_WHITE;
+            this->endingFadeColor = TH06_COLOR_WHITE;
             break;
         }
         else
         {
             color = this->timeFading * 255 / this->fadeFrames;
-            this->endingFadeColor = COLOR_SET_ALPHA(COLOR_WHITE, color);
+            this->endingFadeColor = TH06_COLOR_SET_ALPHA(TH06_COLOR_WHITE, color);
             this->timeFading++;
             break;
         }
@@ -99,7 +99,7 @@ void Ending::FadingEffect()
         this->endingFadeColor = 0x00000000;
         break;
     }
-    if ((this->endingFadeColor & COLOR_BLACK) != 0)
+    if ((this->endingFadeColor & TH06_COLOR_BLACK) != 0)
     {
         ScreenEffect::DrawSquare(&endingRect, this->endingFadeColor);
     }
@@ -357,7 +357,7 @@ ZunResult Ending::ParseEndFile()
                                                      lineDisplayed + ANM_SCRIPT_TEXT_ENDING_TEXT +
                                                          this->timesFileParsed * 2);
                 g_AnmManager->DrawVmTextFmt(&this->sprites[lineDisplayed + this->timesFileParsed * 2], this->textColor,
-                                            COLOR_END_TEXT_SHADOW, textBuffer);
+                                            TH06_COLOR_END_TEXT_SHADOW, textBuffer);
             }
             while (this->endFileDataPtr[0] == '\n' || this->endFileDataPtr[0] == '\0' ||
                    this->endFileDataPtr[0] == '\r')
@@ -393,7 +393,7 @@ ZunResult Ending::ParseEndFile()
                                                      lineDisplayed + ANM_SCRIPT_TEXT_ENDING_TEXT +
                                                          this->timesFileParsed * 2);
                 g_AnmManager->DrawVmTextFmt(&this->sprites[lineDisplayed + this->timesFileParsed * 2], this->textColor,
-                                            COLOR_END_TEXT_SHADOW, textBuffer);
+                                            TH06_COLOR_END_TEXT_SHADOW, textBuffer);
                 if (lineDisplayed)
                 {
                     goto endParsing;

@@ -1,27 +1,35 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <cstddef>
 #include <functional>
 #include <string>
 #include <unordered_map>
 
-#define SET_DRAW_COLOR(renderer, color) SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+// SDL2_ttf stubs - font rendering is deferred on GameCube
+// The config UI needs to be reimplemented with a bitmap font system
 
+// Placeholder types for SDL types
+typedef void *SDL_Renderer;
+typedef void *SDL_Texture;
+typedef void *SDL_Rect;
+typedef void *SDL_Color;
+typedef void *TTF_Font;
+typedef void *SDL_Event;
+
+// TextureLabel placeholder - needs SDL2 implementation
 struct TextureLabel
 {
-    SDL_Rect rect{};
-    SDL_Texture *texture = nullptr;
+    SDL_Rect rect;
+    SDL_Texture *texture;
 };
 
 class LabelCache
 {
   public:
-    explicit LabelCache(TTF_Font *font);
+    explicit LabelCache(TTF_Font font);
     ~LabelCache();
 
-    TextureLabel render(SDL_Renderer *renderer, const std::string &text, SDL_Color color);
+    TextureLabel render(SDL_Renderer renderer, const std::string &text, SDL_Color color);
     void clear();
 
   private:
@@ -38,20 +46,20 @@ class LabelCache
         std::size_t operator()(const CacheKey &key) const;
     };
 
-    TTF_Font *font;
+    TTF_Font font;
     std::unordered_map<CacheKey, TextureLabel, CacheHasher> cache;
 };
 
 class UIContext
 {
   public:
-    UIContext(SDL_Renderer *renderer, TTF_Font *font, SDL_Color backgroundColor);
+    UIContext(SDL_Renderer renderer, TTF_Font font, SDL_Color backgroundColor);
 
     SDL_Color Foreground() const;
     SDL_Color ButtonBg() const;
     SDL_Color Background() const;
 
-    SDL_Renderer *renderer;
+    SDL_Renderer renderer;
     LabelCache labelCache;
     SDL_Color backgroundColor;
 };
@@ -67,7 +75,7 @@ class Widget
 class ToggleBase : public Widget
 {
   public:
-    ToggleBase(SDL_Rect rect, std::string label, TTF_Font *font, bool *dirtyFlag);
+    ToggleBase(SDL_Rect rect, std::string label, TTF_Font font, bool *dirtyFlag);
     ~ToggleBase() override = default;
 
   protected:
@@ -76,7 +84,7 @@ class ToggleBase : public Widget
 
     SDL_Rect rect;
     std::string label;
-    TTF_Font *font;
+    TTF_Font font;
     bool *dirtyFlag;
     int labelWidth = 0;
     int labelHeight = 0;
@@ -85,7 +93,7 @@ class ToggleBase : public Widget
 class Checkbox : public ToggleBase
 {
   public:
-    Checkbox(SDL_Rect rect, std::string label, bool initial, TTF_Font *font, bool *dirtyFlag);
+    Checkbox(SDL_Rect rect, std::string label, bool initial, TTF_Font font, bool *dirtyFlag);
 
     void handleEvent(const SDL_Event &e) override;
     void render(UIContext &ctx) override;
@@ -100,7 +108,7 @@ class Checkbox : public ToggleBase
 class RadioButton : public ToggleBase
 {
   public:
-    RadioButton(SDL_Rect rect, std::string label, int groupId, int optionId, bool initial, TTF_Font *font,
+    RadioButton(SDL_Rect rect, std::string label, int groupId, int optionId, bool initial, TTF_Font font,
                 bool *dirtyFlag);
 
     void handleEvent(const SDL_Event &e) override;

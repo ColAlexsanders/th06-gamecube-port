@@ -38,8 +38,6 @@ u16 GetJoystickCaps(void);
 u32 GetActiveControllerChannel();
 u32 SetButtonFromControllerInputs(u16 *outButtons, i16 controllerButtonToTest, enum TouhouButton touhouButton, int chan);
 
-u32 SetButtonFromDirectInputJoystate(u16 *outButtons, i16 controllerButtonToTest, enum TouhouButton touhouButton, const u8 *inputButtons);
-
 u16 GetControllerInput(u16 buttons);
 const u8 *GetControllerState();
 u16 GetInput(void);

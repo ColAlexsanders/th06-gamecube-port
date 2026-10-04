@@ -1,5 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mouse.h>
+#include "platform.h"
 #include <cstdio>
 
 #include "AnmManager.hpp"
@@ -72,21 +71,20 @@ restart:
     }
     if (!g_Supervisor.cfg.windowed)
     {
-        SDL_ShowCursor(SDL_DISABLE);
+        // Cursor handling - no-op for GameCube
     }
 
     g_GameWindow.curFrame = 0;
 
     while (true)
     {
-        SDL_Event e;
-
-        while (SDL_PollEvent(&e))
+        // Platform event polling
+        platform_pollInput();
+        
+        // Check for quit condition through platform
+        if (0) // TODO: Add platform-specific quit check
         {
-            if (e.type == SDL_QUIT)
-            {
-                goto stop;
-            }
+            goto stop;
         }
 
         renderResult = g_GameWindow.Render();
@@ -95,7 +93,7 @@ restart:
             break;
         }
 
-        //        SDL_Delay(1000.0f / 60.0f);
+        platform_delay(16); // ~60fps
 
         //        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         //        {
@@ -136,7 +134,7 @@ stop:
 
     if (g_GfxBackend != NULL)
         delete g_GfxBackend;
-    SDL_Quit();
+    // SDL_Quit() - no-op, just cleanup
 
     if (renderResult == 2)
     {
@@ -146,18 +144,15 @@ stop:
 
         if (!g_Supervisor.cfg.windowed)
         {
-            SDL_ShowCursor(SDL_ENABLE);
+            // Cursor handling - no-op for GameCube
         }
 
         goto restart;
     }
 
     FileSystem::WriteDataToFile(TH_CONFIG_FILE, &g_Supervisor.cfg, sizeof(g_Supervisor.cfg));
-    //    SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, g_GameWindow.screenSaveActive, NULL, SPIF_SENDCHANGE);
-    //    SystemParametersInfo(SPI_SETLOWPOWERACTIVE, g_GameWindow.lowPowerActive, NULL, SPIF_SENDCHANGE);
-    //    SystemParametersInfo(SPI_SETPOWEROFFACTIVE, g_GameWindow.powerOffActive, NULL, SPIF_SENDCHANGE);
 
-    SDL_ShowCursor(SDL_ENABLE);
+    // Cursor handling - no-op for GameCube
     g_GameErrorContext.Flush();
     return 0;
 }

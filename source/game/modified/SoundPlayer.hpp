@@ -2,8 +2,6 @@
 
 #include "ZunResult.hpp"
 #include "inttypes.hpp"
-#include <SDL2/SDL_audio.h>
-#include <SDL2/SDL_rwops.h>
 #include <atomic>
 #include <mutex>
 #include <thread>
@@ -61,7 +59,7 @@ struct SoundData
 
 struct WavData
 {
-    SDL_RWops *fileStream;
+    void *fileStream; // Placeholder for file stream - SDL_RWops replacement
     u32 dataStartOffset;
     u32 samples;
 };
@@ -99,7 +97,7 @@ struct SoundPlayer
 
     SoundData soundBuffers[128];
     std::mutex soundBufMutex;
-    SDL_AudioDeviceID audioDev;
+    u32 audioDev; // Placeholder - SDL_AudioDeviceID replacement
     std::thread backgroundMusicThreadHandle;
     std::atomic_bool terminateFlag;
     i32 soundBuffersToPlay[3];

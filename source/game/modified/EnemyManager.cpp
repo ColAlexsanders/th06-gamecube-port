@@ -646,9 +646,9 @@ ChainCallbackResult EnemyManager::OnUpdate(EnemyManager *mgr)
                     curEnemy->flags.unk10 = 0;
                     curEnemy->flags.unk11 = 0;
                     g_Gui.bossPresent = 0;
-                    g_EffectManager.SpawnParticles(curEnemy->deathAnm1, &curEnemy->position, 1, COLOR_WHITE);
-                    g_EffectManager.SpawnParticles(curEnemy->deathAnm1, &curEnemy->position, 1, COLOR_WHITE);
-                    g_EffectManager.SpawnParticles(curEnemy->deathAnm1, &curEnemy->position, 1, COLOR_WHITE);
+                    g_EffectManager.SpawnParticles(curEnemy->deathAnm1, &curEnemy->position, 1, TH06_COLOR_WHITE);
+                    g_EffectManager.SpawnParticles(curEnemy->deathAnm1, &curEnemy->position, 1, TH06_COLOR_WHITE);
+                    g_EffectManager.SpawnParticles(curEnemy->deathAnm1, &curEnemy->position, 1, TH06_COLOR_WHITE);
                     break;
                 case 1:
                     g_GameManager.AddScore(curEnemy->score);
@@ -674,7 +674,7 @@ ChainCallbackResult EnemyManager::OnUpdate(EnemyManager *mgr)
                         if (mgr->randomItemSpawnIndex % 3 == 0)
                         {
                             g_EffectManager.SpawnParticles(curEnemy->deathAnm2 + 4, &curEnemy->position, 6,
-                                                           COLOR_WHITE);
+                                                           TH06_COLOR_WHITE);
                             g_ItemManager.SpawnItem(&curEnemy->position,
                                                     (ItemType)g_RandomItems[mgr->randomItemTableIndex], local_8);
                             mgr->randomItemTableIndex++;

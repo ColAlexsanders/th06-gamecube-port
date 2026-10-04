@@ -469,7 +469,7 @@ i32 BulletManager::DespawnBullets(i32 maxBonusScore, bool awardPoints)
         }
 
         g_AsciiManager.CreatePopup1(&bullets->pos, bulletScore,
-                                    bulletScore >= maxBonusScore ? COLOR_YELLOW : COLOR_WHITE);
+                                    bulletScore >= maxBonusScore ? TH06_COLOR_YELLOW : TH06_COLOR_WHITE);
 
         totalBonusScore += bulletScore;
         awardedBullets++;
@@ -1111,7 +1111,7 @@ ChainCallbackResult BulletManager::OnDraw(BulletManager *mgr)
         curLaser->vm0.pos.x = cosine * laserOffset + curLaser->pos.x;
         curLaser->vm0.pos.y = sine * laserOffset + curLaser->pos.y;
         curLaser->vm0.pos.z = 0.0f;
-        curLaser->color = COLOR_COMBINE_ALPHA(COLOR_WHITE, curLaser->color);
+        curLaser->color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_WHITE, curLaser->color);
         g_AnmManager->Draw3(&curLaser->vm0);
 
         if (curLaser->startOffset < 16.0f || curLaser->speed == 0.0f)
@@ -1121,7 +1121,7 @@ ChainCallbackResult BulletManager::OnDraw(BulletManager *mgr)
             curLaser->vm1.pos.z = 0.0f;
             curLaser->vm1.color = curLaser->vm0.color;
             curLaser->vm1.flags.colorOp = AnmVmColorOp_Add;
-            curLaser->vm1.color = COLOR_SET_ALPHA2(curLaser->vm1.color, 0xff);
+            curLaser->vm1.color = TH06_COLOR_SET_ALPHA2(curLaser->vm1.color, 0xff);
             curLaser->vm1.scaleX = (curLaser->width / 10.0f) * ((16.0f - curLaser->startOffset) / 16.0f);
             curLaser->vm1.scaleY = curLaser->vm1.scaleX;
 
@@ -1285,7 +1285,7 @@ void BulletManager::DrawBullet(Bullet *bullet)
     anmVm->pos.x = bullet->pos.x;
     anmVm->pos.y = bullet->pos.y;
     anmVm->pos.z = 0.0;
-    anmVm->color = COLOR_COMBINE_ALPHA(COLOR_WHITE, anmVm->color);
+    anmVm->color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_WHITE, anmVm->color);
 
     if (anmVm->autoRotate != 0)
     {
@@ -1321,7 +1321,7 @@ void BulletManager::DrawBulletNoHwVertex(Bullet *bullet)
     anmVm->pos.x = g_GameManager.arcadeRegionTopLeftPos.x + bullet->pos.x;
     anmVm->pos.y = g_GameManager.arcadeRegionTopLeftPos.y + bullet->pos.y;
     anmVm->pos.z = 0.0;
-    anmVm->color = COLOR_COMBINE_ALPHA(COLOR_WHITE, anmVm->color);
+    anmVm->color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_WHITE, anmVm->color);
 
     if (anmVm->autoRotate != 0)
     {

@@ -42,7 +42,7 @@ void BombData::BombReimuACalc(Player *player)
             player->bombInfo.reimuABombProjectilesState[i] = 0;
         }
         g_ItemManager.RemoveAllItems();
-        g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &player->positionCenter, 1, COLOR_NEONBLUE);
+        g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &player->positionCenter, 1, TH06_COLOR_NEONBLUE);
 
         player->bombProjectiles[8].posX = (player->positionCenter).x;
         player->bombProjectiles[8].posY = (player->positionCenter).y;
@@ -134,9 +134,9 @@ void BombData::BombReimuACalc(Player *player)
                 if (player->unk_838[i] >= 100 || player->bombInfo.timer >= player->bombInfo.duration - 30)
                 {
                     g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_6, &player->bombInfo.bombRegionPositions[i], 8,
-                                                   COLOR_WHITE);
+                                                   TH06_COLOR_WHITE);
                     g_EffectManager.SpawnParticles(PARTICLE_EFFECT_UNK_12, &player->bombInfo.bombRegionPositions[i], 1,
-                                                   COLOR_NEONBLUE);
+                                                   TH06_COLOR_NEONBLUE);
                     player->bombInfo.reimuABombProjectilesState[i] = 2;
 
                     player->bombInfo.sprites[0][i * 4].pendingInterrupt = 1;

@@ -1,6 +1,5 @@
 #include "GameErrorContext.hpp"
 #include "FileSystem.hpp"
-#include <SDL2/SDL_messagebox.h>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -65,10 +64,8 @@ void GameErrorContext::Flush()
     {
         g_GameErrorContext.Log(TH_ERR_LOGGER_END);
 
-        if (m_ShowMessageBox)
-        {
-            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "log", m_Buffer, NULL);
-        }
+        // Message box stub - GameCube doesn't have a native message box
+        // m_ShowMessageBox is set in Fatal(), but we just log instead
 
         logFile = FileSystem::FopenUTF8("./log.txt", "w");
 

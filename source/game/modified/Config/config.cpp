@@ -1,8 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_messagebox.h>
-#include <SDL2/SDL_ttf.h>
-
-#include <algorithm>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -13,6 +9,14 @@
 #include "../Supervisor.hpp"
 #include "../inttypes.hpp"
 #include "Widgets.hpp"
+
+// SDL2 stubs - font rendering is deferred on GameCube
+// This config UI needs a complete rewrite using bitmap fonts
+
+struct SDL_Color
+{
+    u8 r, g, b, a;
+};
 
 constexpr SDL_Color kBackgroundColor{43, 43, 43, 255};
 

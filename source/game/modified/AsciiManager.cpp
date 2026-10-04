@@ -438,8 +438,8 @@ i32 StageMenu::OnUpdateGameMenu()
             this->menuBackground.pos.z = 0.0f;
         }
     case GAME_MENU_PAUSE_CURSOR_UNPAUSE:
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].color = COLOR_LIGHT_RED;
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_QUIT].color = COLOR_SET_ALPHA(COLOR_GREY, 0x80);
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].color = TH06_COLOR_LIGHT_RED;
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_QUIT].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0x80);
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].scaleY = 1.7f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].scaleX = 1.7f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_QUIT].scaleY = 1.5f;
@@ -465,8 +465,8 @@ i32 StageMenu::OnUpdateGameMenu()
         }
         break;
     case GAME_MENU_PAUSE_CURSOR_QUIT:
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].color = COLOR_SET_ALPHA(COLOR_GREY, 0x80);
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_QUIT].color = COLOR_LIGHT_RED;
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0x80);
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_QUIT].color = TH06_COLOR_LIGHT_RED;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].scaleY = 1.5f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_UNPAUSE].scaleX = 1.5f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_QUIT].scaleY = 1.7f;
@@ -507,8 +507,8 @@ i32 StageMenu::OnUpdateGameMenu()
         }
         break;
     case GAME_MENU_QUIT_CURSOR_YES:
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].color = COLOR_LIGHT_RED;
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_NO].color = COLOR_SET_ALPHA(COLOR_GREY, 0x80);
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].color = TH06_COLOR_LIGHT_RED;
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_NO].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0x80);
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].scaleY = 1.7f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].scaleX = 1.7f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_NO].scaleY = 1.5f;
@@ -533,8 +533,8 @@ i32 StageMenu::OnUpdateGameMenu()
         }
         break;
     case GAME_MENU_QUIT_CURSOR_NO:
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].color = COLOR_SET_ALPHA(COLOR_GREY, 0x80);
-        this->menuSprites[GAME_MENU_SPRITE_CURSOR_NO].color = COLOR_LIGHT_RED;
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0x80);
+        this->menuSprites[GAME_MENU_SPRITE_CURSOR_NO].color = TH06_COLOR_LIGHT_RED;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].scaleY = 1.5f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_YES].scaleX = 1.5f;
         this->menuSprites[GAME_MENU_SPRITE_CURSOR_NO].scaleY = 1.7f;
@@ -691,8 +691,8 @@ i32 StageMenu::OnUpdateRetryMenu()
         this->curState += RETRY_MENU_CURSOR_NO;
         this->numFrames = 0;
     case RETRY_MENU_CURSOR_YES:
-        this->menuSprites[RETRY_MENU_SPRITE_YES].color = COLOR_LIGHT_RED;
-        this->menuSprites[RETRY_MENU_SPRITE_NO].color = COLOR_SET_ALPHA(COLOR_GREY, 0x80);
+        this->menuSprites[RETRY_MENU_SPRITE_YES].color = TH06_COLOR_LIGHT_RED;
+        this->menuSprites[RETRY_MENU_SPRITE_NO].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0x80);
         this->menuSprites[RETRY_MENU_SPRITE_YES].scaleY = 1.7f;
         this->menuSprites[RETRY_MENU_SPRITE_YES].scaleX = 1.7f;
         this->menuSprites[RETRY_MENU_SPRITE_NO].scaleY = 1.5f;
@@ -718,8 +718,8 @@ i32 StageMenu::OnUpdateRetryMenu()
         }
         break;
     case RETRY_MENU_CURSOR_NO:
-        this->menuSprites[RETRY_MENU_SPRITE_NO].color = COLOR_LIGHT_RED;
-        this->menuSprites[RETRY_MENU_SPRITE_YES].color = COLOR_SET_ALPHA(COLOR_GREY, 0x80);
+        this->menuSprites[RETRY_MENU_SPRITE_NO].color = TH06_COLOR_LIGHT_RED;
+        this->menuSprites[RETRY_MENU_SPRITE_YES].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0x80);
         this->menuSprites[RETRY_MENU_SPRITE_YES].scaleY = 1.5f;
         this->menuSprites[RETRY_MENU_SPRITE_YES].scaleX = 1.5f;
         this->menuSprites[RETRY_MENU_SPRITE_NO].scaleY = 1.7f;

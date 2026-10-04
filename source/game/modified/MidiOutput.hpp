@@ -3,8 +3,6 @@
 #include "ZunResult.hpp"
 #include "inttypes.hpp"
 
-#include <SDL2/SDL_timer.h>
-
 #ifdef _WIN32
 #include "midi/MidiWin32.hpp"
 #elif defined(LIBASOUND_MIDI_SUPPORT)
@@ -86,9 +84,7 @@ struct MidiOutput
     ~MidiOutput();
 
     i32 StopTimer();
-    void StartTimer(u32 delay, SDL_TimerCallback cb, void *data);
-
-    static u32 SDLCALL DefaultTimerCallback(u32 interval, MidiOutput *timer);
+    void StartTimer(u32 delay, void (*cb)(void *), void *data);
 
     void OnTimerElapsed();
 
@@ -108,7 +104,7 @@ struct MidiOutput
 
     static u32 ReadVariableLength(u8 **curTrackDataCursor);
 
-    SDL_TimerID timerId;
+    // Timer stub - no SDL timers on GameCube
     u32 lastTimerTicks;
 
     u8 *midiFileData[32];

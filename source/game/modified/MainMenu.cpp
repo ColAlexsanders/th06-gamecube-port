@@ -1,9 +1,6 @@
-// #include <D3DX8.h>
-#include <cstdio>
-// #include <direct.h>
-// #include <windows.h>
-
 #include "MainMenu.hpp"
+
+#include "platform.h"
 
 #include "AnmManager.hpp"
 #include "AsciiManager.hpp"
@@ -21,8 +18,6 @@
 #include "i18n.hpp"
 #include "utils.hpp"
 
-#include <SDL2/SDL_gamecontroller.h>
-#include <SDL2/SDL_timer.h>
 #include <cstring>
 
 static const char *const g_ShortCharacterList[4] = {"ReimuA ", "ReimuB ", "MarisaA", "MarisaB"};
@@ -66,9 +61,9 @@ ChainCallbackResult MainMenu::OnUpdate(MainMenu *menu)
     {
         if (menu->lastFrameTime == 0)
         {
-            menu->lastFrameTime = SDL_GetTicks();
+            menu->lastFrameTime = platform_getTicks();
         }
-        time = SDL_GetTicks();
+        time = platform_getTicks();
         menu->frameCountForRefreshRateCalc = menu->frameCountForRefreshRateCalc + 1;
         deltaTime = time - menu->lastFrameTime;
         if (deltaTime >= 700)
@@ -189,12 +184,12 @@ ChainCallbackResult MainMenu::OnUpdate(MainMenu *menu)
         if (32 <= menu->stateTimer)
         {
             controllerData = Controller::GetControllerState();
-            for (sVar1 = 0; sVar1 < SDL_CONTROLLER_BUTTON_MAX; sVar1++)
+            for (sVar1 = 0; sVar1 < 12; sVar1++)
             {
                 if ((controllerData[sVar1] & 0x80) != 0)
                     break;
             }
-            if (sVar1 < SDL_CONTROLLER_BUTTON_MAX && g_LastJoystickInput != sVar1)
+            if (sVar1 < 12 && g_LastJoystickInput != sVar1)
             {
                 g_SoundPlayer.PlaySoundByIdx(SOUND_SELECT);
                 switch (menu->cursor)
@@ -337,11 +332,11 @@ ChainCallbackResult MainMenu::OnUpdate(MainMenu *menu)
                 {
                     if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                     {
-                        vmList->color = COLOR_BLACK;
+                        vmList->color = TH06_COLOR_BLACK;
                     }
                     else
                     {
-                        vmList->color = COLOR_WHITE;
+                        vmList->color = TH06_COLOR_WHITE;
                     }
                     pos2.x = -6.0f;
                     pos2.y = -6.0f;
@@ -361,11 +356,11 @@ ChainCallbackResult MainMenu::OnUpdate(MainMenu *menu)
             {
                 if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                 {
-                    vmList->color = COLOR_BLACK;
+                    vmList->color = TH06_COLOR_BLACK;
                 }
                 else
                 {
-                    vmList->color = COLOR_WHITE;
+                    vmList->color = TH06_COLOR_WHITE;
                 }
                 pos3.x = -6.0f;
                 pos3.y = -6.0f;
@@ -970,7 +965,7 @@ void MainMenu::DrawMenuItem(AnmVm *vm, i32 itemNumber, i32 cursor, ZunColor curr
         else
         {
             g_AnmManager->SetActiveSprite(vm, vm->baseSpriteIndex + vm_amount);
-            vm->color = (currentItemColor & COLOR_BLACK) | COLOR_RGB_MASK; // just... why?
+            vm->color = (currentItemColor & TH06_COLOR_BLACK) | TH06_COLOR_RGB_MASK; // just... why?
         }
 
         currentItemPos.x = -4.0f;
@@ -988,7 +983,7 @@ void MainMenu::DrawMenuItem(AnmVm *vm, i32 itemNumber, i32 cursor, ZunColor curr
         else
         {
             g_AnmManager->SetActiveSprite(vm, vm->baseSpriteIndex);
-            vm->color = (otherItemColor & COLOR_BLACK) | COLOR_RGB_MASK; // again, why?
+            vm->color = (otherItemColor & TH06_COLOR_BLACK) | TH06_COLOR_RGB_MASK; // again, why?
         }
         otherItemPos.x = 0.0f;
         otherItemPos.y = 0.0f;
@@ -1010,11 +1005,11 @@ ZunResult MainMenu::BeginStartup()
     }
     if (g_Supervisor.startupTimeBeforeMenuMusic > 0)
     {
-        time = SDL_GetTicks();
+        time = platform_getTicks();
         while ((time - g_Supervisor.startupTimeBeforeMenuMusic >= 0) &&
                (3000 > time - g_Supervisor.startupTimeBeforeMenuMusic))
         {
-            time = SDL_GetTicks();
+            time = platform_getTicks();
         }
         g_Supervisor.startupTimeBeforeMenuMusic = 0;
         g_Supervisor.PlayAudio("bgm/th06_01.mid");
@@ -1025,11 +1020,11 @@ ZunResult MainMenu::BeginStartup()
         this->vm[i].flags.colorOp = AnmVmColorOp_Add;
         if ((g_Supervisor.cfg.opts & (1 << GCOS_USE_D3D_HW_TEXTURE_BLENDING)) == 0)
         {
-            this->vm[i].color = COLOR_BLACK;
+            this->vm[i].color = TH06_COLOR_BLACK;
         }
         else
         {
-            this->vm[i].color = COLOR_WHITE;
+            this->vm[i].color = TH06_COLOR_WHITE;
         }
         vector3Ptr.x = 0.0;
         vector3Ptr.y = 0.0;
@@ -1063,11 +1058,11 @@ bool MainMenu::WeirdSecondInputCheck()
     }
     if (!((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1))
     {
-        this->vm[this->cursor].color = COLOR_RED;
+        this->vm[this->cursor].color = TH06_COLOR_RED;
     }
     else
     {
-        this->vm[this->cursor].color = COLOR_PINK;
+        this->vm[this->cursor].color = TH06_COLOR_PINK;
     }
     d3dVec.x = -6.0;
     d3dVec.y = -6.0;
@@ -1075,7 +1070,7 @@ bool MainMenu::WeirdSecondInputCheck()
     this->vm[this->cursor].posOffset = d3dVec;
 
     this->minimumOpacity = 0;
-    this->menuTextColor = COLOR_MENU_ACTIVE_BACKGROUND;
+    this->menuTextColor = TH06_COLOR_MENU_ACTIVE_BACKGROUND;
     this->numFramesSinceActive = 0;
     this->framesActive = 60;
     return false;
@@ -1093,7 +1088,7 @@ ZunResult MainMenu::DrawStartMenu(void)
     AnmVm *drawVm = this->vm;
     for (i = 0; i < 8; i++, drawVm++ /* zun why */)
     {
-        DrawMenuItem(drawVm, i, this->cursor, COLOR_RED, COLOR_START_MENU_ITEM_INACTIVE, 122);
+        DrawMenuItem(drawVm, i, this->cursor, TH06_COLOR_RED, TH06_COLOR_START_MENU_ITEM_INACTIVE, 122);
     }
     if (this->stateTimer >= 0x14)
     {
@@ -1118,7 +1113,7 @@ ZunResult MainMenu::DrawStartMenu(void)
                 }
                 this->stateTimer = 0;
                 this->minimumOpacity = 0x40000000;
-                this->menuTextColor = COLOR_BLACK;
+                this->menuTextColor = TH06_COLOR_BLACK;
                 this->numFramesSinceActive = 0;
                 this->framesActive = 60;
                 g_SoundPlayer.PlaySoundByIdx(SOUND_SELECT);
@@ -1136,7 +1131,7 @@ ZunResult MainMenu::DrawStartMenu(void)
                     g_GameManager.difficulty = EXTRA;
                     this->stateTimer = 0;
                     this->minimumOpacity = 0x40000000;
-                    this->menuTextColor = COLOR_BLACK;
+                    this->menuTextColor = TH06_COLOR_BLACK;
                     this->numFramesSinceActive = 0;
                     this->framesActive = 60;
                     g_SoundPlayer.PlaySoundByIdx(SOUND_SELECT);
@@ -1163,7 +1158,7 @@ ZunResult MainMenu::DrawStartMenu(void)
                 }
                 this->stateTimer = 0;
                 this->minimumOpacity = 0x40000000;
-                this->menuTextColor = COLOR_BLACK;
+                this->menuTextColor = TH06_COLOR_BLACK;
                 this->numFramesSinceActive = 0;
                 this->framesActive = 60;
                 g_SoundPlayer.PlaySoundByIdx(SOUND_SELECT);
@@ -1177,7 +1172,7 @@ ZunResult MainMenu::DrawStartMenu(void)
                 g_GameManager.isInPracticeMode = 0;
                 this->stateTimer = 0;
                 this->minimumOpacity = 0x40000000;
-                this->menuTextColor = COLOR_BLACK;
+                this->menuTextColor = TH06_COLOR_BLACK;
                 this->numFramesSinceActive = 0;
                 this->framesActive = 60;
                 g_SoundPlayer.PlaySoundByIdx(SOUND_SELECT);
@@ -1190,7 +1185,7 @@ ZunResult MainMenu::DrawStartMenu(void)
                 this->gameState = STATE_SCORE;
                 this->stateTimer = 0;
                 this->minimumOpacity = 0x40000000;
-                this->menuTextColor = COLOR_BLACK;
+                this->menuTextColor = TH06_COLOR_BLACK;
                 this->numFramesSinceActive = 0;
                 this->framesActive = 60;
                 g_SoundPlayer.PlaySoundByIdx(SOUND_SELECT);
@@ -1497,11 +1492,11 @@ ZunResult MainMenu::DrawReplayMenu() const
         {
             if (i == this->chosenReplay)
             {
-                g_AsciiManager.color = COLOR_LIGHT_RED;
+                g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             }
             else
             {
-                g_AsciiManager.color = COLOR_GREY;
+                g_AsciiManager.color = TH06_COLOR_GREY;
             }
         }
         else
@@ -1511,11 +1506,11 @@ ZunResult MainMenu::DrawReplayMenu() const
 
             if (i == this->chosenReplay)
             {
-                g_AsciiManager.color = COLOR_WHITE;
+                g_AsciiManager.color = TH06_COLOR_WHITE;
             }
             else
             {
-                g_AsciiManager.color = COLOR_GREY;
+                g_AsciiManager.color = TH06_COLOR_GREY;
             }
         }
 
@@ -1526,7 +1521,7 @@ ZunResult MainMenu::DrawReplayMenu() const
     }
     if (this->gameState == STATE_REPLAY_SELECT && this->currentReplay)
     {
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
         g_AsciiManager.isSelected = false;
 
         vmRef = &this->vm[97];
@@ -1542,11 +1537,11 @@ ZunResult MainMenu::DrawReplayMenu() const
             {
                 if (i == this->cursor)
                 {
-                    g_AsciiManager.color = COLOR_LIGHT_RED;
+                    g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
                 }
                 else
                 {
-                    g_AsciiManager.color = COLOR_GREY;
+                    g_AsciiManager.color = TH06_COLOR_GREY;
                 }
             }
             else
@@ -1555,11 +1550,11 @@ ZunResult MainMenu::DrawReplayMenu() const
                 g_AsciiManager.isSelected = isSelected2;
                 if (i == this->cursor)
                 {
-                    g_AsciiManager.color = COLOR_WHITE;
+                    g_AsciiManager.color = TH06_COLOR_WHITE;
                 }
                 else
                 {
-                    g_AsciiManager.color = COLOR_GREY;
+                    g_AsciiManager.color = TH06_COLOR_GREY;
                 }
             }
             if (this->currentReplay->stageReplayData[i])
@@ -1573,7 +1568,7 @@ ZunResult MainMenu::DrawReplayMenu() const
             }
         }
     }
-    g_AsciiManager.color = COLOR_WHITE;
+    g_AsciiManager.color = TH06_COLOR_WHITE;
     g_AsciiManager.isSelected = false;
     return ZUN_SUCCESS;
 }
@@ -1584,7 +1579,7 @@ void MainMenu::ColorMenuItem(AnmVm *vm, i32 item, i32 subItem, i32 subItemSelect
     {
         if (!g_Supervisor.cfg.IsSoftwareTexturing())
         {
-            vm->color = COLOR_MENU_ITEM_DEFAULT;
+            vm->color = TH06_COLOR_MENU_ITEM_DEFAULT;
         }
         else
         {
@@ -1598,7 +1593,7 @@ void MainMenu::ColorMenuItem(AnmVm *vm, i32 item, i32 subItem, i32 subItemSelect
     {
         if (!g_Supervisor.cfg.IsSoftwareTexturing())
         {
-            vm->color = COLOR_MENU_ITEM_HIGHLIGHT;
+            vm->color = TH06_COLOR_MENU_ITEM_HIGHLIGHT;
         }
         else if (vm->baseSpriteIndex < ANM_OFFSET_TITLE04)
         {
@@ -1615,11 +1610,11 @@ void MainMenu::ColorMenuItem(AnmVm *vm, i32 item, i32 subItem, i32 subItemSelect
     {
         if ((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING & 1) == 0)
         {
-            vm->color = COLOR_SET_ALPHA2(vm->color, 128);
+            vm->color = TH06_COLOR_SET_ALPHA2(vm->color, 128);
         }
         else
         {
-            vm->color = COLOR_SET_ALPHA2(vm->color, 128);
+            vm->color = TH06_COLOR_SET_ALPHA2(vm->color, 128);
         }
 
         vm->posOffset += ZunVec3(0.0, 0.0, 0.0);
@@ -1628,11 +1623,11 @@ void MainMenu::ColorMenuItem(AnmVm *vm, i32 item, i32 subItem, i32 subItemSelect
     {
         if ((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING & 1) == 0)
         {
-            vm->color = COLOR_SET_ALPHA2(vm->color, 255);
+            vm->color = TH06_COLOR_SET_ALPHA2(vm->color, 255);
         }
         else
         {
-            vm->color = COLOR_SET_ALPHA2(vm->color, 255);
+            vm->color = TH06_COLOR_SET_ALPHA2(vm->color, 255);
         }
 
         vm->posOffset += ZunVec3(-4.0, -4.0, 0.0);
@@ -1955,20 +1950,20 @@ ChainCallbackResult MainMenu::OnDraw(MainMenu *menu)
         {
             menu->numFramesSinceActive += 1;
         }
-        targetOpacity = COLOR_ALPHA(menu->menuTextColor) - COLOR_ALPHA(menu->minimumOpacity);
+        targetOpacity = TH06_COLOR_ALPHA(menu->menuTextColor) - TH06_COLOR_ALPHA(menu->minimumOpacity);
         ScreenEffect::DrawSquare(
             &window,
-            COLOR_SET_ALPHA(menu->menuTextColor, targetOpacity * menu->numFramesSinceActive / menu->framesActive +
-                                                     COLOR_ALPHA(menu->minimumOpacity)));
+            TH06_COLOR_SET_ALPHA(menu->menuTextColor, targetOpacity * menu->numFramesSinceActive / menu->framesActive +
+                                                     TH06_COLOR_ALPHA(menu->minimumOpacity)));
     }
     else if (menu->numFramesSinceActive != 0)
     {
         menu->numFramesSinceActive -= 1;
-        targetOpacity = COLOR_ALPHA(menu->menuTextColor) - COLOR_ALPHA(menu->minimumOpacity);
+        targetOpacity = TH06_COLOR_ALPHA(menu->menuTextColor) - TH06_COLOR_ALPHA(menu->minimumOpacity);
         ScreenEffect::DrawSquare(
             &window,
-            COLOR_SET_ALPHA(menu->menuTextColor, targetOpacity * menu->numFramesSinceActive / menu->framesInactive +
-                                                     COLOR_ALPHA(menu->minimumOpacity)));
+            TH06_COLOR_SET_ALPHA(menu->menuTextColor, targetOpacity * menu->numFramesSinceActive / menu->framesInactive +
+                                                     TH06_COLOR_ALPHA(menu->minimumOpacity)));
     }
     for (vmIdx = 0; vmIdx < 98; vmIdx++, curVm++)
     {
@@ -2114,11 +2109,11 @@ ZunResult MainMenu::LoadDiffCharSelect(MainMenu *menu)
         vm->flags.colorOp = AnmVmColorOp_Add;
         if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
         {
-            vm->color = COLOR_BLACK;
+            vm->color = TH06_COLOR_BLACK;
         }
         else
         {
-            vm->color = COLOR_WHITE;
+            vm->color = TH06_COLOR_WHITE;
         }
         vm->posOffset = ZunVec3(0, 0, 0);
         vm->baseSpriteIndex = vm->activeSpriteIndex;
@@ -2156,11 +2151,11 @@ ZunResult MainMenu::LoadReplayMenu(MainMenu *menu)
 
         if ((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING & 1) == 0)
         {
-            vm->color = COLOR_BLACK;
+            vm->color = TH06_COLOR_BLACK;
         }
         else
         {
-            vm->color = COLOR_WHITE;
+            vm->color = TH06_COLOR_WHITE;
         }
         vm->posOffset = ZunVec3(0, 0, 0);
         vm->baseSpriteIndex = vm->activeSpriteIndex;

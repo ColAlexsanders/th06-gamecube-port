@@ -1,0 +1,11 @@
+assets/
+source/game/original/
+compile_flags.txt
+progress.md
+th06-gc-project-context.md
+build/
+reference/
+*.dol
+*.elf
+*.gz
+

@@ -1,92 +1,113 @@
 #pragma once
 
-#include <SDL2/SDL_opengl.h>
+// OpenGL function pointers stubbed for GameCube
+// The GfxInterface abstraction in GfxInterface.hpp provides the actual rendering API
 
-// Function pointers for OpenGL functions used in EoSD. This is necessary because Windows
-//   opengl32 only goes up to OpenGL 1.1 and some of the blending parameters we need are
-//   from 1.3. Resolving function addresses at runtime using SDL_GL_GetProcAddress gets
-//   around that restriction. Plus not directly linking the GL library is good for flexibility
-//   in general, even on UNIX
+// Stub types for GL types that may be used elsewhere
+typedef unsigned int GLenum;
+typedef unsigned int GLuint;
+typedef float GLfloat;
+typedef float GLclampf;
+typedef int GLint;
+typedef unsigned int GLbitfield;
+typedef char GLchar;
+typedef unsigned char GLboolean;
+typedef short GLshort;
+typedef unsigned short GLushort;
+typedef int GLsizei;
+typedef double GLdouble;
+typedef unsigned int GLhandleARB;
+typedef void GLvoid;
+
 struct GLFuncTable
 {
-    void ResolveFunctions(bool glesContext);
+    // For GameCube, all function pointers are no-ops
+    // The actual rendering is done through GfxInterface/GXBackend
+    
+    void ResolveFunctions(bool glesContext)
+    {
+        // No-op for GameCube - GX doesn't use function pointers like OpenGL
+        (void)glesContext;
+    }
 
     // Functions where arguments use doubles in OpenGL and floats in GLES and therefore need manual dispatch
-    void glClearDepthf(GLclampf depth);
-    void glDepthRangef(GLclampf near_val, GLclampf far_val);
+    void glClearDepthf(GLclampf depth) { (void)depth; }
+    void glDepthRangef(GLclampf near_val, GLclampf far_val) { (void)near_val; (void)far_val; }
 
     // Function pointers for functions shared between GL and GLES
-    void(GLAPIENTRY *glAlphaFunc)(GLenum func, GLclampf ref);
-    void(GLAPIENTRY *glBindTexture)(GLenum target, GLuint texture);
-    void(GLAPIENTRY *glBlendFunc)(GLenum sfactor, GLenum dfactor);
-    void(GLAPIENTRY *glClear)(GLbitfield mask);
-    void(GLAPIENTRY *glClearColor)(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
-    void(GLAPIENTRY *glColorPointer)(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
-    void(GLAPIENTRY *glDeleteTextures)(GLsizei n, const GLuint *textures);
-    void(GLAPIENTRY *glDepthFunc)(GLenum func);
-    void(GLAPIENTRY *glDepthMask)(GLboolean flag);
-    void(GLAPIENTRY *glDisableClientState)(GLenum cap);
-    void(GLAPIENTRY *glDrawArrays)(GLenum mode, GLint first, GLsizei count);
-    void(GLAPIENTRY *glEnable)(GLenum cap);
-    void(GLAPIENTRY *glEnableClientState)(GLenum cap);
-    void(GLAPIENTRY *glFogf)(GLenum pname, GLfloat param);
-    void(GLAPIENTRY *glFogfv)(GLenum pname, const GLfloat *params);
-    void(GLAPIENTRY *glGenTextures)(GLsizei n, GLuint *textures);
-    GLenum(GLAPIENTRY *glGetError)(void);
-    void(GLAPIENTRY *glGetFloatv)(GLenum pname, GLfloat *params);
-    void(GLAPIENTRY *glGetIntegerv)(GLenum pname, GLint *params);
-    void(GLAPIENTRY *glLoadIdentity)(void);
-    void(GLAPIENTRY *glLoadMatrixf)(const GLfloat *m);
-    void(GLAPIENTRY *glMatrixMode)(GLenum mode);
-    void(GLAPIENTRY *glMultMatrixf)(const GLfloat *m);
-    void(GLAPIENTRY *glPopMatrix)(void);
-    void(GLAPIENTRY *glPushMatrix)(void);
-    void(GLAPIENTRY *glReadPixels)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
+    // All stubbed for GameCube
+    void(*glAlphaFunc)(GLenum func, GLclampf ref);
+    void(*glBindTexture)(GLenum target, GLuint texture);
+    void(*glBlendFunc)(GLenum sfactor, GLenum dfactor);
+    void(*glClear)(GLbitfield mask);
+    void(*glClearColor)(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+    void(*glColorPointer)(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
+    void(*glDeleteTextures)(GLsizei n, const GLuint *textures);
+    void(*glDepthFunc)(GLenum func);
+    void(*glDepthMask)(GLboolean flag);
+    void(*glDisableClientState)(GLenum cap);
+    void(*glDrawArrays)(GLenum mode, GLint first, GLsizei count);
+    void(*glEnable)(GLenum cap);
+    void(*glEnableClientState)(GLenum cap);
+    void(*glFogf)(GLenum pname, GLfloat param);
+    void(*glFogfv)(GLenum pname, const GLfloat *params);
+    void(*glGenTextures)(GLsizei n, GLuint *textures);
+    GLenum(*glGetError)(void);
+    void(*glGetFloatv)(GLenum pname, GLfloat *params);
+    void(*glGetIntegerv)(GLenum pname, GLint *params);
+    void(*glLoadIdentity)(void);
+    void(*glLoadMatrixf)(const GLfloat *m);
+    void(*glMatrixMode)(GLenum mode);
+    void(*glMultMatrixf)(const GLfloat *m);
+    void(*glPopMatrix)(void);
+    void(*glPushMatrix)(void);
+    void(*glReadPixels)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                                    GLvoid *pixels);
-    void(GLAPIENTRY *glShadeModel)(GLenum mode);
-    void(GLAPIENTRY *glTexCoordPointer)(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
-    void(GLAPIENTRY *glTexEnvfv)(GLenum target, GLenum pname, const GLfloat *params);
-    void(GLAPIENTRY *glTexEnvi)(GLenum target, GLenum pname, GLint param);
-    void(GLAPIENTRY *glTexImage2D)(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height,
+    void(*glShadeModel)(GLenum mode);
+    void(*glTexCoordPointer)(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
+    void(*glTexEnvfv)(GLenum target, GLenum pname, const GLfloat *params);
+    void(*glTexEnvi)(GLenum target, GLenum pname, GLint param);
+    void(*glTexImage2D)(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels);
-    void(GLAPIENTRY *glTexParameteri)(GLenum target, GLenum pname, GLint param);
-    void(GLAPIENTRY *glTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
+    void(*glTexParameteri)(GLenum target, GLenum pname, GLint param);
+    void(*glTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
                                       GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-    void(GLAPIENTRY *glVertexPointer)(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
-    void(GLAPIENTRY *glViewport)(GLint x, GLint y, GLsizei width, GLsizei height);
+    void(*glVertexPointer)(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
+    void(*glViewport)(GLint x, GLint y, GLsizei width, GLsizei height);
 
-    // GL(ES) 2.X / WebGL
-    PFNGLATTACHSHADERPROC glAttachShader;
-    PFNGLBINDATTRIBLOCATIONPROC glBindAttribLocation;
-    PFNGLCOMPILESHADERPROC glCompileShader;
-    PFNGLCREATEPROGRAMPROC glCreateProgram;
-    PFNGLCREATESHADERPROC glCreateShader;
-    PFNGLDELETEPROGRAMPROC glDeleteProgram;
-    PFNGLDELETESHADERPROC glDeleteShader;
-    PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
-    PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
-    PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
-    PFNGLGETPROGRAMIVPROC glGetProgramiv;
-    PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-    PFNGLGETSHADERIVPROC glGetShaderiv;
-    PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
-    PFNGLLINKPROGRAMPROC glLinkProgram;
-    PFNGLSHADERSOURCEPROC glShaderSource;
-    PFNGLUNIFORM1FPROC glUniform1f;
-    PFNGLUNIFORM1IPROC glUniform1i;
-    PFNGLUNIFORM4FPROC glUniform4f;
-    PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
-    PFNGLUSEPROGRAMPROC glUseProgram;
-    PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
+    // GL(ES) 2.X / WebGL - stubbed for GameCube
+    void(*glAttachShader)(GLenum shader, GLenum shaderType);
+    void(*glBindAttribLocation)(GLenum program, GLuint index, const GLchar *name);
+    void(*glCompileShader)(GLenum shader);
+    GLenum(*glCreateProgram)(void);
+    GLenum(*glCreateShader)(GLenum type);
+    void(*glDeleteProgram)(GLuint program);
+    void(*glDeleteShader)(GLuint shader);
+    void(*glDisableVertexAttribArray)(GLuint index);
+    void(*glEnableVertexAttribArray)(GLuint index);
+    void(*glGetProgramInfoLog)(GLuint program, GLsizei maxLength, GLsizei *length, GLchar *infoLog);
+    void(*glGetProgramiv)(GLuint program, GLenum pname, GLint *params);
+    void(*glGetShaderInfoLog)(GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog);
+    void(*glGetShaderiv)(GLuint shader, GLenum pname, GLint *params);
+    GLint(*glGetUniformLocation)(GLuint program, const GLchar *name);
+    void(*glLinkProgram)(GLuint program);
+    void(*glShaderSource)(GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+    void(*glUniform1f)(GLint location, GLfloat v0);
+    void(*glUniform1i)(GLint location, GLint v0);
+    void(*glUniform4f)(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+    void(*glUniformMatrix4fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void(*glUseProgram)(GLuint program);
+    void(*glVertexAttribPointer)(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
 
   private:
     // GLES forms for cases where they're different
-    void(GLAPIENTRY *glClearDepthf_ptr)(GLclampf depth);
-    void(GLAPIENTRY *glDepthRangef_ptr)(GLclampf near_val, GLclampf far_val);
+    void(*glClearDepthf_ptr)(GLclampf depth);
+    void(*glDepthRangef_ptr)(GLclampf near_val, GLclampf far_val);
 
     // GL forms for cases where they're different
-    void(GLAPIENTRY *glClearDepth)(GLclampd depth);
-    void(GLAPIENTRY *glDepthRange)(GLclampd near_val, GLclampd far_val);
+    // Stubs for double-precision GL functions (not used in GameCube)
+    void(*glClearDepth)(GLdouble depth);
+    void(*glDepthRange)(GLdouble near_val, GLdouble far_val);
 
     bool isGlesContext;
 };

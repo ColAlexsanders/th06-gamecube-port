@@ -551,18 +551,18 @@ i32 ResultScreen::HandleResultKeyboard()
             sprite->pendingInterrupt = this->diffSelected + 3;
         }
 
-        g_AnmManager->DrawStringFormat2(this->unk_28a0, COLOR_RGB(COLOR_WHITE), COLOR_RGB(COLOR_BLACK),
+        g_AnmManager->DrawStringFormat2(this->unk_28a0, TH06_COLOR_RGB(TH06_COLOR_WHITE), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                         g_CharacterList[this->charUsed * 2]);
         if (g_GameManager.shotType != SHOT_TYPE_A)
         {
-            this->unk_28a0[0].color = COLOR_TRANSPARENT_WHITE;
+            this->unk_28a0[0].color = TH06_COLOR_TRANSPARENT_WHITE;
         }
 
-        g_AnmManager->DrawStringFormat2(&this->unk_28a0[1], COLOR_RGB(COLOR_WHITE), COLOR_RGB(COLOR_BLACK),
+        g_AnmManager->DrawStringFormat2(&this->unk_28a0[1], TH06_COLOR_RGB(TH06_COLOR_WHITE), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                         g_CharacterList[this->charUsed * 2]);
         if (g_GameManager.shotType != SHOT_TYPE_B)
         {
-            this->unk_28a0[1].color = COLOR_TRANSPARENT_WHITE;
+            this->unk_28a0[1].color = TH06_COLOR_TRANSPARENT_WHITE;
         }
 
         this->hscr.character = this->charUsed * 2 + g_GameManager.shotType;
@@ -782,13 +782,13 @@ i32 ResultScreen::HandleReplaySaveKeyboard()
         sprite = &this->unk_40[16];
         if (this->cursor == 0)
         {
-            sprite[0].color = COLOR_COMBINE_ALPHA(COLOR_PASTEL_RED, sprite[0].color);
-            sprite[1].color = COLOR_COMBINE_ALPHA(COLOR_ASHEN_GREY, sprite[1].color);
+            sprite[0].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_PASTEL_RED, sprite[0].color);
+            sprite[1].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_ASHEN_GREY, sprite[1].color);
         }
         else
         {
-            sprite[0].color = COLOR_COMBINE_ALPHA(COLOR_ASHEN_GREY, sprite[0].color);
-            sprite[1].color = COLOR_COMBINE_ALPHA(COLOR_PASTEL_RED, sprite[1].color);
+            sprite[0].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_ASHEN_GREY, sprite[0].color);
+            sprite[1].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_PASTEL_RED, sprite[1].color);
         }
         if (this->frameTimer < 80)
         {
@@ -1070,13 +1070,13 @@ i32 ResultScreen::HandleReplaySaveKeyboard()
         sprite = &this->unk_40[16];
         if (this->cursor == 0)
         {
-            sprite[0].color = COLOR_COMBINE_ALPHA(COLOR_PASTEL_RED, sprite[0].color);
-            sprite[1].color = COLOR_COMBINE_ALPHA(COLOR_ASHEN_GREY, sprite[1].color);
+            sprite[0].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_PASTEL_RED, sprite[0].color);
+            sprite[1].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_ASHEN_GREY, sprite[1].color);
         }
         else
         {
-            sprite[0].color = COLOR_COMBINE_ALPHA(COLOR_ASHEN_GREY, sprite[0].color);
-            sprite[1].color = COLOR_COMBINE_ALPHA(COLOR_PASTEL_RED, sprite[1].color);
+            sprite[0].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_ASHEN_GREY, sprite[0].color);
+            sprite[1].color = TH06_COLOR_COMBINE_ALPHA(TH06_COLOR_PASTEL_RED, sprite[1].color);
         }
 
         if (this->frameTimer < 20)
@@ -1312,7 +1312,7 @@ u32 ResultScreen::DrawFinalStats() const
             unknownFloat += 12.5f;
         }
 
-        g_AsciiManager.color = COLOR_WHITE;
+        g_AsciiManager.color = TH06_COLOR_WHITE;
     }
     return 0;
 }
@@ -1387,11 +1387,11 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 vm->flags.colorOp = 1;
                 if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                 {
-                    vm->color &= COLOR_BLACK;
+                    vm->color &= TH06_COLOR_BLACK;
                 }
                 else
                 {
-                    vm->color &= COLOR_WHITE;
+                    vm->color &= TH06_COLOR_WHITE;
                 }
             }
 
@@ -1402,11 +1402,11 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 {
                     if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                     {
-                        vm->color = COLOR_DARK_GREY;
+                        vm->color = TH06_COLOR_DARK_GREY;
                     }
                     else
                     {
-                        vm->color = COLOR_WHITE;
+                        vm->color = TH06_COLOR_WHITE;
                     }
 
                     vm->posOffset = ZunVec3(-4.0f, -4.0f, 0.0f);
@@ -1415,11 +1415,11 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 {
                     if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                     {
-                        vm->color = COLOR_SET_ALPHA(COLOR_BLACK, 176);
+                        vm->color = TH06_COLOR_SET_ALPHA(TH06_COLOR_BLACK, 176);
                     }
                     else
                     {
-                        vm->color = COLOR_SET_ALPHA(COLOR_WHITE, 176);
+                        vm->color = TH06_COLOR_SET_ALPHA(TH06_COLOR_WHITE, 176);
                     }
                     vm->posOffset = ZunVec3(0.0f, 0.0f, 0.0f);
                 }
@@ -1445,11 +1445,11 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
             {
                 if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                 {
-                    vm->color = COLOR_DARK_GREY;
+                    vm->color = TH06_COLOR_DARK_GREY;
                 }
                 else
                 {
-                    vm->color = COLOR_WHITE;
+                    vm->color = TH06_COLOR_WHITE;
                 }
                 vm->posOffset = ZunVec3(-4.0f, -4.0f, 0.0f);
             }
@@ -1457,11 +1457,11 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
             {
                 if (((g_Supervisor.cfg.opts >> GCOS_USE_D3D_HW_TEXTURE_BLENDING) & 1) == 0)
                 {
-                    vm->color = COLOR_SET_ALPHA(COLOR_BLACK, 176);
+                    vm->color = TH06_COLOR_SET_ALPHA(TH06_COLOR_BLACK, 176);
                 }
                 else
                 {
-                    vm->color = COLOR_SET_ALPHA(COLOR_WHITE, 176);
+                    vm->color = TH06_COLOR_SET_ALPHA(TH06_COLOR_WHITE, 176);
                 }
                 vm->posOffset = ZunVec3(0.0f, 0.0f, 0.0f);
             }
@@ -1598,9 +1598,9 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
         if (resultScreen->charUsed != resultScreen->cursor && resultScreen->frameTimer == 20)
         {
             resultScreen->charUsed = resultScreen->cursor;
-            g_AnmManager->DrawStringFormat2(&resultScreen->unk_28a0[0], COLOR_RGB(COLOR_WHITE), COLOR_RGB(COLOR_BLACK),
+            g_AnmManager->DrawStringFormat2(&resultScreen->unk_28a0[0], TH06_COLOR_RGB(TH06_COLOR_WHITE), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                             g_CharacterList[resultScreen->charUsed * 2]);
-            g_AnmManager->DrawStringFormat2(&resultScreen->unk_28a0[1], COLOR_RGB(COLOR_WHITE), COLOR_RGB(COLOR_BLACK),
+            g_AnmManager->DrawStringFormat2(&resultScreen->unk_28a0[1], TH06_COLOR_RGB(TH06_COLOR_WHITE), TH06_COLOR_RGB(TH06_COLOR_BLACK),
                                             g_CharacterList[resultScreen->charUsed * 2 + 1]);
         }
         if (resultScreen->frameTimer < 30)
@@ -1646,13 +1646,13 @@ ChainCallbackResult ResultScreen::OnUpdate(ResultScreen *resultScreen)
                 }
                 if (g_GameManager.catk[i].numAttempts == 0)
                 {
-                    g_AnmManager->DrawVmTextFmt(&resultScreen->unk_28a0[i % 10], COLOR_RGB(COLOR_WHITE),
-                                                COLOR_RGB(COLOR_BLACK), TH_UNKNOWN_SPELLCARD);
+                    g_AnmManager->DrawVmTextFmt(&resultScreen->unk_28a0[i % 10], TH06_COLOR_RGB(TH06_COLOR_WHITE),
+                                                TH06_COLOR_RGB(TH06_COLOR_BLACK), TH_UNKNOWN_SPELLCARD);
                 }
                 else
                 {
-                    g_AnmManager->DrawVmTextFmt(&resultScreen->unk_28a0[i % 10], COLOR_RGB(COLOR_WHITE),
-                                                COLOR_RGB(COLOR_BLACK), g_GameManager.catk[i].name);
+                    g_AnmManager->DrawVmTextFmt(&resultScreen->unk_28a0[i % 10], TH06_COLOR_RGB(TH06_COLOR_WHITE),
+                                                TH06_COLOR_RGB(TH06_COLOR_BLACK), g_GameManager.catk[i].name);
                 }
             }
         }
@@ -1923,7 +1923,7 @@ ChainCallbackResult ResultScreen::OnDraw(ResultScreen *resultScreen)
                 charPos.x = 0.0f;
                 if (resultScreen->selectedCharacter == row * RESULT_KEYBOARD_COLUMNS + column)
                 {
-                    g_AsciiManager.color = COLOR_KEYBOARD_KEY_HIGHLIGHT;
+                    g_AsciiManager.color = TH06_COLOR_KEYBOARD_KEY_HIGHLIGHT;
                     if (resultScreen->frameTimer % 64 < 32)
                     {
                         charPos.y = 1.2f + 0.8f * (resultScreen->frameTimer % 0x20) / 32.0f;
@@ -1939,7 +1939,7 @@ ChainCallbackResult ResultScreen::OnDraw(ResultScreen *resultScreen)
                 }
                 else
                 {
-                    g_AsciiManager.color = COLOR_KEYBOARD_KEY_NORMAL;
+                    g_AsciiManager.color = TH06_COLOR_KEYBOARD_KEY_NORMAL;
                     g_AsciiManager.scale.x = 1.0f;
                     g_AsciiManager.scale.y = 1.0f;
                 }
@@ -1989,11 +1989,11 @@ ChainCallbackResult ResultScreen::OnDraw(ResultScreen *resultScreen)
             sprite++;
             if (row == resultScreen->replayNumber)
             {
-                g_AsciiManager.color = COLOR_LIGHT_RED;
+                g_AsciiManager.color = TH06_COLOR_LIGHT_RED;
             }
             else
             {
-                g_AsciiManager.color = COLOR_GREY;
+                g_AsciiManager.color = TH06_COLOR_GREY;
             }
             if (resultScreen->resultScreenState == RESULT_SCREEN_STATE_WRITING_REPLAY_NAME)
             {
@@ -2024,7 +2024,7 @@ ChainCallbackResult ResultScreen::OnDraw(ResultScreen *resultScreen)
             }
         }
     }
-    g_AsciiManager.color = COLOR_WHITE;
+    g_AsciiManager.color = TH06_COLOR_WHITE;
     resultScreen->DrawFinalStats();
 
     return CHAIN_CALLBACK_RESULT_CONTINUE;

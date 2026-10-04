@@ -2,7 +2,6 @@
 
 #include "../AnmManager.hpp"
 #include "GfxInterface.hpp"
-#include <SDL2/SDL.h>
 #include <memory>
 #include <vector>
 
@@ -140,9 +139,10 @@ struct Software : GfxInterface
 
     Texture *boundTexture = nullptr;
 
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *framebufferTexture;
+    // GameCube uses GX backend, these are stubs
+    void *window;
+    void *renderer;
+    void *framebufferTexture;
     u32 *framebuffer;
     f32 *depthBuffer;
 

@@ -115,7 +115,7 @@ struct AnmVm
         this->scaleY = 1.0;
         this->scaleInterpEndTime = 0;
         this->alphaInterpEndTime = 0;
-        this->color = COLOR_WHITE;
+        this->color = TH06_COLOR_WHITE;
         this->matrix.Identity();
         std::memset(&this->flags, 0, sizeof(this->flags));
         this->flags.isVisible = 1;

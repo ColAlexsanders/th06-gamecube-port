@@ -576,7 +576,7 @@ void Software::Draw(PrimitiveType type, i32 start, i32 count)
                     }
                     ZunColor diffuse = RGBAToZunColor((u8)(dif.r * clipW), (u8)(dif.g * clipW), (u8)(dif.b * clipW),
                                                       (u8)(dif.a * clipW));
-                    ZunColor fragColor = COLOR_WHITE;
+                    ZunColor fragColor = TH06_COLOR_WHITE;
                     ZunColor fragArg1 = fragColor;
                     ZunColor fragArg2 = fragColor;
                     if (boundTexture && useTexCoord)

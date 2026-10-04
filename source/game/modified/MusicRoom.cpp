@@ -82,8 +82,8 @@ bool MusicRoom::ProcessInput()
             if (lineCharBuffer[0] != '\0')
             {
                 this->descriptionSprites[i].flags.flag1 = 1;
-                g_AnmManager->DrawVmTextFmt(&this->descriptionSprites[i], COLOR_MUSIC_ROOM_SONG_DESC_TEXT,
-                                            COLOR_MUSIC_ROOM_SONG_DESC_SHADOW, lineCharBuffer);
+                g_AnmManager->DrawVmTextFmt(&this->descriptionSprites[i], TH06_COLOR_MUSIC_ROOM_SONG_DESC_TEXT,
+                                            TH06_COLOR_MUSIC_ROOM_SONG_DESC_SHADOW, lineCharBuffer);
             }
             else
             {
@@ -185,13 +185,13 @@ ChainCallbackResult MusicRoom::OnDraw(MusicRoom *musicRoom)
     {
         if (musicRoom->cursor != i)
         {
-            musicRoom->titleSprites[i].color = COLOR_SET_ALPHA(COLOR_GREY, 0xe0);
-            g_AsciiManager.color = COLOR_SET_ALPHA(COLOR_GREY, 0xe0);
+            musicRoom->titleSprites[i].color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0xe0);
+            g_AsciiManager.color = TH06_COLOR_SET_ALPHA(TH06_COLOR_GREY, 0xe0);
         }
         else
         {
-            musicRoom->titleSprites[i].color = COLOR_WHITE;
-            g_AsciiManager.color = COLOR_WHITE;
+            musicRoom->titleSprites[i].color = TH06_COLOR_WHITE;
+            g_AsciiManager.color = TH06_COLOR_WHITE;
         }
 
         musicRoom->titleSprites[i].pos.x = 93.0f;
@@ -218,7 +218,7 @@ ChainCallbackResult MusicRoom::OnDraw(MusicRoom *musicRoom)
         g_AnmManager->DrawNoRotation(&musicRoom->descriptionSprites[i]);
     }
 
-    g_AsciiManager.color = COLOR_WHITE;
+    g_AsciiManager.color = TH06_COLOR_WHITE;
 
     return CHAIN_CALLBACK_RESULT_CONTINUE;
 }
@@ -359,8 +359,8 @@ finishMusiccmtRead:
     for (i = 0; i < musicRoom->numDescriptors; i++)
     {
         g_AnmManager->InitializeAndSetSprite(&musicRoom->titleSprites[i], ANM_OFFSET_MUSIC01 + i);
-        g_AnmManager->DrawVmTextFmt(&musicRoom->titleSprites[i], COLOR_MUSIC_ROOM_SONG_TITLE_TEXT,
-                                    COLOR_MUSIC_ROOM_SONG_TITLE_SHADOW, musicRoom->trackDescriptors[i].title);
+        g_AnmManager->DrawVmTextFmt(&musicRoom->titleSprites[i], TH06_COLOR_MUSIC_ROOM_SONG_TITLE_TEXT,
+                                    TH06_COLOR_MUSIC_ROOM_SONG_TITLE_SHADOW, musicRoom->trackDescriptors[i].title);
         musicRoom->titleSprites[i].pos.x = 93.0f;
         musicRoom->titleSprites[i].pos.y = 104.0f + ((i + 1) * 18) - 20.0f;
         musicRoom->titleSprites[i].pos.z = 0.0f;
@@ -381,8 +381,8 @@ finishMusiccmtRead:
         if (lineCharBuffer[0] != '\0')
         {
             musicRoom->descriptionSprites[i].flags.flag1 = 1;
-            g_AnmManager->DrawVmTextFmt(&musicRoom->descriptionSprites[i], COLOR_MUSIC_ROOM_SONG_DESC_TEXT,
-                                        COLOR_MUSIC_ROOM_SONG_DESC_SHADOW, lineCharBuffer);
+            g_AnmManager->DrawVmTextFmt(&musicRoom->descriptionSprites[i], TH06_COLOR_MUSIC_ROOM_SONG_DESC_TEXT,
+                                        TH06_COLOR_MUSIC_ROOM_SONG_DESC_SHADOW, lineCharBuffer);
         }
         else
         {

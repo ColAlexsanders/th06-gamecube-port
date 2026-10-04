@@ -172,11 +172,13 @@ void TextHelper::RenderTextToTexture(i32 xPos, i32 yPos, i32 spriteWidth, i32 sp
                                      TextureData *outTexture)
 {
     char convertedText[1024];
-    SDL_Rect finalCopyDst;
-    SDL_Rect finalCopySrc;
-    SDL_Rect shadowRect;
-    SDL_Rect textRect;
+    Rect finalCopyDst;
+    Rect finalCopySrc;
+    Rect shadowRect;
+    Rect textRect;
 
+    // Font rendering stub - SDL_ttf not available on GameCube
+    // Text rendering is deferred until a font system is implemented
     if (!isUTF8Encoded(string))
     {
         char *utf8 = sjis2utf8(string);
@@ -188,110 +190,41 @@ void TextHelper::RenderTextToTexture(i32 xPos, i32 yPos, i32 spriteWidth, i32 sp
         strcpy(convertedText, string);
     }
 
-    TTF_SetFontSize(g_Font, fontHeight * 2);
+    // Stub: text rendering not yet implemented
+    // Real implementation would use a bitmap font atlas or FreeType port
+    (void)xPos;
+    (void)yPos;
+    (void)spriteWidth;
+    (void)spriteHeight;
+    (void)fontHeight;
+    (void)fontWidth;
+    (void)textColor;
+    (void)shadowColor;
+    (void)string;
+    (void)outTexture;
+    (void)convertedText;
+    (void)finalCopyDst;
+    (void)finalCopySrc;
+    (void)shadowRect;
+    (void)textRect;
+    (void)shadowColor;
+    (void)textColor;
 
-    finalCopySrc.x = 0;
-    finalCopySrc.y = 0;
-    finalCopySrc.w = spriteWidth * 2 - 2;
-    finalCopySrc.h = fontHeight * 2 - 2;
-
-    SDL_FillRect(g_TextBufferSurface, &finalCopySrc, 0);
-
-    if (shadowColor != COLOR_WHITE)
-    {
-        SDL_Surface *shadowText;
-
-        // Render shadow.
-        SDL_Color sdlShadowColor;
-        sdlShadowColor.a = 0xFF;
-        sdlShadowColor.b = (shadowColor >> 16) & 0xFF;
-        sdlShadowColor.g = (shadowColor >> 8) & 0xFF;
-        sdlShadowColor.r = shadowColor & 0xFF;
-
-        shadowText = TTF_RenderUTF8_Blended(g_Font, convertedText, sdlShadowColor);
-
-        if (shadowText != NULL)
-        {
-            shadowRect.x = xPos * 2 + 3;
-            shadowRect.y = 2;
-            shadowRect.w = shadowText->width;
-            shadowRect.h = shadowText->height;
-
-            SDL_SetSurfaceBlendMode(shadowText, SDL_BLENDMODE_NONE);
-            SDL_BlitSurface(shadowText, NULL, g_TextBufferSurface, &shadowRect);
-
-            SDL_FreeSurface(shadowText);
-        }
-    }
-
-    SDL_Color sdlTextColor;
-    sdlTextColor.a = 0xFF;
-    sdlTextColor.b = (textColor >> 16) & 0xFF;
-    sdlTextColor.g = (textColor >> 8) & 0xFF;
-    sdlTextColor.r = textColor & 0xFF;
-
-    SDL_Surface *regularText = TTF_RenderUTF8_Blended(g_Font, convertedText, sdlTextColor);
-
-    if (regularText != NULL)
-    {
-        textRect.x = xPos * 2;
-        textRect.y = 0;
-        textRect.w = regularText->width;
-        textRect.h = regularText->height;
-
-        SurfaceOverwriteBlend(regularText, g_TextBufferSurface, xPos * 2);
-
-        SDL_FreeSurface(regularText);
-    }
-
-    // Once we get an API abstraction layer for surface operations, this needs to change
-    //   We really shouldn't be clobbering the texture format
-    if (!outTexture->textureData || outTexture->format != TEX_FMT_A8R8G8B8)
-    {
-        free(outTexture->textureData);
-        outTexture->textureData = (u8 *)malloc(outTexture->width * outTexture->height * 4);
-        memset(outTexture->textureData, 0, outTexture->width * outTexture->height * 4);
-    }
-
-    outTexture->format = TEX_FMT_A8R8G8B8;
-    SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormatFrom(
-        outTexture->textureData, outTexture->width, outTexture->height, SDL_BITSPERPIXEL(SDL_PIXELFORMAT_RGBA32),
-        outTexture->width * SDL_BYTESPERPIXEL(SDL_PIXELFORMAT_RGBA32), SDL_PIXELFORMAT_RGBA32);
-
-    InvertAlpha(0, 0, spriteWidth * 2, fontHeight * 2 + 6);
-
-    finalCopyDst.x = 0;
-    finalCopyDst.y = yPos;
-    finalCopyDst.w = spriteWidth;
-    finalCopyDst.h = 16;
-
-    if (SDL_SoftStretchLinear(g_TextBufferSurface, &finalCopySrc, textureSurface, &finalCopyDst) < 0)
-    {
-        SDL_Log("SDL_BlitScaled failed! Error: %s", SDL_GetError());
-    }
-
-    g_AnmManager->SetCurrentTexture(outTexture->handle);
-
-    g_GfxBackend->SetTextureImage(outTexture->width, outTexture->height, PIXEL_RGBA, PIXEL_UNSIGNED_BYTE,
-                                  outTexture->textureData);
-
-    SDL_FreeSurface(textureSurface);
-
-    return;
+    // TODO: Implement font rendering with bitmap font atlas
+    // This requires either:
+    // 1. Pre-baking a bitmap font atlas offline
+    // 2. Porting FreeType to devkitPPC
 }
 
 // Extended to free all globals for text helper
 void TextHelper::ReleaseTextBuffer()
 {
-    if (g_Font != NULL)
-    {
-        TTF_CloseFont(g_Font);
-        g_Font = NULL;
-    }
-
+    // Font cleanup stub - no SDL_ttf on GameCube
     if (g_TextBufferSurface != NULL)
     {
-        SDL_FreeSurface(g_TextBufferSurface);
+        free(g_TextBufferSurface->pixels);
+        g_TextBufferSurface->pixels = NULL;
+        delete g_TextBufferSurface;
         g_TextBufferSurface = NULL;
     }
 

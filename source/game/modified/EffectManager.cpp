@@ -147,7 +147,7 @@ i32 EffectManager::EffectUpdateCallback4(Effect *effect)
         }
 
         alpha = 1.0f - effect->unk_17b / 16.0f;
-        effect->vm.color = COLOR_SET_ALPHA3(effect->vm.color, (i32)(alpha * 255.0f));
+        effect->vm.color = TH06_COLOR_SET_ALPHA3(effect->vm.color, (i32)(alpha * 255.0f));
 
         effect->vm.scaleY = 2.0f - alpha;
         effect->vm.scaleX = effect->vm.scaleY;

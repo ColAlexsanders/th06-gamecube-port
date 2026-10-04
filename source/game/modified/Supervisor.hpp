@@ -5,7 +5,7 @@
 #include "Surface.hpp"
 #include "Chain.hpp"
 #include "Controller.hpp"
-//#include "MidiOutput.hpp"
+#include "MidiOutput.hpp"
 #include "ZunMath.hpp"
 #include "ZunResult.hpp"
 #include "inttypes.hpp"
@@ -170,7 +170,8 @@ struct Supervisor
     f32 effectiveFramerateMultiplier;
     f32 framerateMultiplier;
 
-    //MidiOutput *midiOutput;
+    // MidiOutput for audio/MIDI playback (stubbed for GameCube)
+    MidiOutput *midiOutput;
 
     f32 unk1b4;
     f32 unk1b8;

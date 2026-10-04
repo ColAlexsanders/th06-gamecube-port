@@ -60,7 +60,7 @@ void ItemManager::SpawnItem(const ZunVec3 *position, ItemType itemType, i32 stat
             item->startPosition = item->currentPosition;
         }
         g_AnmManager->SetAndExecuteScriptIdx(&item->sprite, ANM_SCRIPT_BULLET3_ITEMS_START + itemType);
-        item->sprite.color = COLOR_WHITE;
+        item->sprite.color = TH06_COLOR_WHITE;
         item->unk_142 = 1;
         return;
     }
@@ -197,7 +197,7 @@ void ItemManager::OnUpdate()
                     }
                     else
                     {
-                        g_AsciiManager.CreatePopup1(&curItem->currentPosition, 10, COLOR_WHITE);
+                        g_AsciiManager.CreatePopup1(&curItem->currentPosition, 10, TH06_COLOR_WHITE);
                     }
                 }
                 g_GameManager.IncreaseSubrank(1);
@@ -276,7 +276,7 @@ void ItemManager::OnUpdate()
                     }
                     else
                     {
-                        g_AsciiManager.CreatePopup1(&curItem->currentPosition, 10, COLOR_WHITE);
+                        g_AsciiManager.CreatePopup1(&curItem->currentPosition, 10, TH06_COLOR_WHITE);
                     }
                 }
                 break;
@@ -307,7 +307,7 @@ void ItemManager::OnUpdate()
                 }
                 g_GameManager.currentPower = 128;
                 g_GameManager.AddScore(1000);
-                g_AsciiManager.CreatePopup1(&curItem->currentPosition, 1000, COLOR_WHITE);
+                g_AsciiManager.CreatePopup1(&curItem->currentPosition, 1000, TH06_COLOR_WHITE);
                 g_Gui.flags.flag2 = 2;
                 break;
             case ITEM_POINT_BULLET:
@@ -317,7 +317,7 @@ void ItemManager::OnUpdate()
                     itemScore = 100;
                 }
                 g_GameManager.score += itemScore;
-                g_AsciiManager.CreatePopup2(&curItem->currentPosition, itemScore, COLOR_WHITE);
+                g_AsciiManager.CreatePopup2(&curItem->currentPosition, itemScore, TH06_COLOR_WHITE);
                 break;
             }
             curItem->isInUse = 0;
@@ -380,7 +380,7 @@ void ItemManager::OnDraw()
             {
                 itemAlpha = 0x40;
             }
-            curItem->sprite.color = COLOR_SET_ALPHA3(curItem->sprite.color, itemAlpha);
+            curItem->sprite.color = TH06_COLOR_SET_ALPHA3(curItem->sprite.color, itemAlpha);
         }
         else
         {
@@ -388,7 +388,7 @@ void ItemManager::OnDraw()
             {
                 g_AnmManager->SetActiveSprite(&curItem->sprite, curItem->itemType + 512);
                 curItem->unk_142 = 1;
-                curItem->sprite.color = COLOR_WHITE;
+                curItem->sprite.color = TH06_COLOR_WHITE;
             }
         }
         g_AnmManager->DrawNoRotation(&curItem->sprite);

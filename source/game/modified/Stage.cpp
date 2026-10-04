@@ -55,10 +55,10 @@ ChainCallbackResult Stage::OnUpdate(Stage *stage)
         // When Sakuya uses her time stop ability, we want to darken her
         // spellcard background a bit, to give a visual indication of what's
         // going on.
-        COLOR_SET_COMPONENT(stage->spellcardBackground.color, COLOR_ALPHA_BYTE_IDX, 0x60);
-        COLOR_SET_COMPONENT(stage->spellcardBackground.color, COLOR_BLUE_BYTE_IDX, 0x80);
-        COLOR_SET_COMPONENT(stage->spellcardBackground.color, COLOR_GREEN_BYTE_IDX, 0x30);
-        COLOR_SET_COMPONENT(stage->spellcardBackground.color, COLOR_RED_BYTE_IDX, 0x30);
+        TH06_COLOR_SET_COMPONENT(stage->spellcardBackground.color, TH06_COLOR_ALPHA_BYTE_IDX, 0x60);
+        TH06_COLOR_SET_COMPONENT(stage->spellcardBackground.color, TH06_COLOR_BLUE_BYTE_IDX, 0x80);
+        TH06_COLOR_SET_COMPONENT(stage->spellcardBackground.color, TH06_COLOR_GREEN_BYTE_IDX, 0x30);
+        TH06_COLOR_SET_COMPONENT(stage->spellcardBackground.color, TH06_COLOR_RED_BYTE_IDX, 0x30);
         return CHAIN_CALLBACK_RESULT_CONTINUE;
     }
     for (;;)
@@ -189,11 +189,11 @@ ChainCallbackResult Stage::OnUpdate(Stage *stage)
             }
             for (idx = 0; idx < 4; idx++)
             {
-                COLOR_SET_COMPONENT(stage->skyFog.color, idx,
-                                    (u8)(((f32)COLOR_GET_COMPONENT(stage->skyFogInterpFinal.color, idx) -
-                                          (f32)COLOR_GET_COMPONENT(stage->skyFogInterpInitial.color, idx)) *
+                TH06_COLOR_SET_COMPONENT(stage->skyFog.color, idx,
+                                    (u8)(((f32)TH06_COLOR_GET_COMPONENT(stage->skyFogInterpFinal.color, idx) -
+                                          (f32)TH06_COLOR_GET_COMPONENT(stage->skyFogInterpInitial.color, idx)) *
                                              skyFogInterpRatio +
-                                         (f32)COLOR_GET_COMPONENT(stage->skyFogInterpInitial.color, idx)));
+                                         (f32)TH06_COLOR_GET_COMPONENT(stage->skyFogInterpInitial.color, idx)));
             }
             stage->skyFog.nearPlane =
                 (stage->skyFogInterpFinal.nearPlane - stage->skyFogInterpInitial.nearPlane) * skyFogInterpRatio +
@@ -324,7 +324,7 @@ ZunResult Stage::AddedCallback(Stage *stage)
     {
         return ZUN_ERROR;
     }
-    stage->skyFog.color = COLOR_BLACK;
+    stage->skyFog.color = TH06_COLOR_BLACK;
     stage->skyFog.nearPlane = 200.0;
     stage->skyFog.farPlane = 500.0;
     interpFinal.x = 0;

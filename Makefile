@@ -3,11 +3,18 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
+# For this project, DEVKITPPC must point to /opt/devkitpro/devkitPPC
+# The libogc2 include/lib paths are at /opt/devkitpro/libogc2/gamecube
+#---------------------------------------------------------------------------------
 ifeq ($(strip $(DEVKITPPC)),)
-$(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>devkitPPC")
+$(error "Please set DEVKITPPC in your environment. export DEVKITPPC=/opt/devkitpro/devkitPPC")
 endif
 
-include $(DEVKITPPC)/libogc2/gamecube_rules
+include $(DEVKITPPC)/gamecube_rules
+
+# Override to use libogc2 instead of libogc
+export LIBOGC_INC := /opt/devkitpro/libogc2/gamecube/include
+export LIBOGC_LIB := /opt/devkitpro/libogc2/gamecube/lib
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
@@ -17,9 +24,9 @@ include $(DEVKITPPC)/libogc2/gamecube_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source/game/modified source/platform source/game/modified/graphics source/game/modified/midi source/game/modified/pbg3 source/game/modified/thirdparty
 DATA		:=	data  
-INCLUDES	:=
+INCLUDES	:=	source/platform
 
 #---------------------------------------------------------------------------------
 # options for code generation
