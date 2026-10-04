@@ -3,9 +3,10 @@ source/game/original/
 compile_flags.txt
 progress.md
 th06-gc-project-context.md
+SDL_MIGRATION_PROGRESS.md
 build/
 reference/
 *.dol
 *.elf
 *.gz
-
+AGENTS.md
