@@ -16,10 +16,45 @@
 #include "pbg3/Pbg3Archive.hpp"
 #include "utils.hpp"
 
+#include "in_dat.h"
+#include "md_dat.h"
+#include "cm_dat.h"
+#include "ed_dat.h"
+#include "st_dat.h"
+#include "tl_dat.h"
+#include "cfg_dat.h"
+
 u32 g_LastFileSize;
+
+// THIS IS FOR TESTING ON DOLPHIN since Dolphin does not have SD gecko compatibility for Gamecube.
+//   Dolphin doesn't emulate any FAT-capable GC storage, meaning libfat has nothing to mount.
+struct EmbeddedAsset
+{
+    const char * name;
+    const u8 * data; // data symbol from bin2s ran on the given .DAT file
+    u32 size;
+};
+
+static const EmbeddedAsset kEmbeddedAssets[] = { 
+    {"紅魔郷IN.DAT", in_dat, in_dat_size},
+    {"紅魔郷MD.DAT", md_dat, md_dat_size},
+    {"紅魔郷CM.DAT", cm_dat, cm_dat_size},
+    {"紅魔郷ED.DAT", ed_dat, ed_dat_size},
+    {"紅魔郷ST.DAT", st_dat, st_dat_size},
+    {"紅魔郷TL.DAT", tl_dat, tl_dat_size},
+    {"東方紅魔郷.cfg", cfg_dat, cfg_dat_size},
+};
 
 FILE *FileSystem::FopenUTF8(const char *filepath, const char *mode)
 {
+    if (mode[0] == 'r')
+    {
+        for (size_t i = 0; i < ARRAY_SIZE(kEmbeddedAssets); i++)
+        {
+            if (std::strcmp(kEmbeddedAssets[i].name, filepath) == 0)
+                return fmemopen((void *)kEmbeddedAssets[i].data, kEmbeddedAssets[i].size, mode);
+        }
+    }
 #ifndef _WIN32
     return std::fopen(filepath, mode);
 #else

@@ -1,7 +1,7 @@
-#ifdef DEBUG
 #include <cstdarg>
 #include <cstdio>
-#endif
+#include <gccore.h>
+#include <ogc/system.h>
 
 #include "ZunMath.hpp"
 #include "i18n.hpp"
@@ -11,7 +11,6 @@ namespace utils
 {
 void DebugPrint(const char *fmt, ...)
 {
-#ifdef DEBUG
     char tmpBuffer[512];
     std::va_list args;
 
@@ -19,8 +18,8 @@ void DebugPrint(const char *fmt, ...)
     std::vsnprintf(tmpBuffer, 511, fmt, args);
     va_end(args);
 
-    std::printf("DEBUG2: %s\n", tmpBuffer);
-#endif
+    // Use SYS_Report for Dolphin's debug console
+    SYS_Report(tmpBuffer);
 }
 
 f32 AddNormalizeAngle(f32 a, f32 b)
@@ -57,7 +56,6 @@ void Rotate(ZunVec3 *outVector, const ZunVec3 *point, f32 angle)
 
 void DebugPrint2(const char *fmt, ...)
 {
-#ifdef DEBUG
     char tmpBuffer[512];
     std::va_list args;
 
@@ -65,7 +63,6 @@ void DebugPrint2(const char *fmt, ...)
     std::vsnprintf(tmpBuffer, 511, fmt, args);
     va_end(args);
 
-    std::printf("DEBUG2: %s\n", tmpBuffer);
-#endif
+    SYS_Report(tmpBuffer);
 }
 }; // namespace utils

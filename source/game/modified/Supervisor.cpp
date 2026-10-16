@@ -3,6 +3,7 @@
 #include "AsciiManager.hpp"
 #include "Chain.hpp"
 #include "ChainPriorities.hpp"
+#include "Controller.hpp"
 #include "Ending.hpp"
 #include "FileSystem.hpp"
 #include "GameErrorContext.hpp"
@@ -17,6 +18,7 @@
 #include "TextHelper.hpp"
 #include "i18n.hpp"
 #include "inttypes.hpp"
+#include "platform.h"
 #include "utils.hpp"
 
 #include <cstdio>
@@ -25,15 +27,15 @@
 
 Supervisor g_Supervisor;
 ControllerMapping g_ControllerMapping = {
-    (i16)SDL_CONTROLLER_BUTTON_A,
-    (i16)SDL_CONTROLLER_BUTTON_B,
-    (i16)SDL_CONTROLLER_BUTTON_LEFTSHOULDER,
-    (i16)SDL_CONTROLLER_BUTTON_START,
-    (i16)SDL_CONTROLLER_BUTTON_DPAD_UP,
-    (i16)SDL_CONTROLLER_BUTTON_DPAD_DOWN,
-    (i16)SDL_CONTROLLER_BUTTON_DPAD_LEFT,
-    (i16)SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
-    (i16)SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
+    (i16)GCButton::A,
+    (i16)GCButton::B,
+    (i16)GCButton::L,
+    (i16)GCButton::Start,
+    (i16)GCButton::DPadUp,
+    (i16)GCButton::DPadDown,
+    (i16)GCButton::DPadLeft,
+    (i16)GCButton::DPadRight,
+    (i16)GCButton::R,
 };
 Surface *g_TextBufferSurface;
 u16 g_LastFrameInput;
@@ -325,7 +327,7 @@ ZunResult Supervisor::AddedCallback(Supervisor *s)
 
     g_AnmManager->ReleaseSurface(0);
 
-    s->startupTimeBeforeMenuMusic = SDL_GetTicks();
+    s->startupTimeBeforeMenuMusic = platform_getTicks();
     Supervisor::SetupDInput(s);
 
     s->midiOutput = new MidiOutput();
@@ -430,15 +432,17 @@ ZunResult Supervisor::SetupDInput(Supervisor *supervisor)
     //    supervisor->keyboard->Acquire();
     g_GameErrorContext.Log(TH_ERR_DIRECTINPUT_INITIALIZED);
 
-    int numSticks = SDL_NumJoysticks();
+    // On GameCube, we use PAD_ScanPads() for controller input
+    // SDL_NumJoysticks() -> Check for controllers via PAD_ScanPads()
+    // For now, just set up channel 0 as the default controller
+    supervisor->gameControllerChannel = 0;
 
-    for (int i = 0; i < numSticks; i++)
+    // Check if any controller is connected on channel 0
+    // SDL_IsGameController(i) -> Check via PAD_ButtonsDown()
+    u32 padStatus = PAD_ScanPads();
+    if (padStatus & (1 << (31 - supervisor->gameControllerChannel)))
     {
-        if (SDL_IsGameController(i) && (supervisor->gameController = SDL_GameControllerOpen(i)) != NULL)
-        {
-
-            break;
-        }
+        // Controller is connected, button mappings are set via g_ControllerMapping
     }
 
     //    supervisor->dinputIface->EnumDevices(DI8DEVCLASS_GAMECTRL, Supervisor::EnumGameControllersCb, NULL,
@@ -507,11 +511,7 @@ ZunResult Supervisor::DeletedCallback(Supervisor *s)
     //    {
     //        s->controller->Unacquire();
     //    }
-    if (s->gameController != NULL)
-    {
-        SDL_GameControllerClose(s->gameController);
-        s->gameController = NULL;
-    }
+    // SDL_GameControllerClose is not needed on GameCube
     //    if (s->dinputIface != NULL)
     //    {
     //        s->dinputIface->Release();
@@ -523,45 +523,35 @@ ZunResult Supervisor::DeletedCallback(Supervisor *s)
 void Supervisor::DrawFpsCounter()
 {
     u32 curTime;
-    float framerate;
-    float elapsed;
     float fps;
     ZunVec3 fpsCounterPos;
 
     static u32 g_NumFramesSinceLastTime = 0;
-    static u32 g_LastTime = SDL_GetTicks();
+    static u32 g_LastTime = 0;
     static char g_FpsCounterBuffer[256];
 
-    curTime = SDL_GetTicks();
+    // Initialize g_LastTime on first call
+    if (g_LastTime == 0)
+    {
+        g_LastTime = platform_getTicks();
+        // Add visible debug text that appears on screen
+        ZunVec3 debugPos = {10.0f, 20.0f, 0.0f};
+        char debugText[128];
+        sprintf(debugText, "TH06 GC Port v0.1");
+        g_AsciiManager.AddString(&debugPos, debugText);
+    }
+    
+    curTime = platform_getTicks();
     g_NumFramesSinceLastTime = g_NumFramesSinceLastTime + 1 + (u32)g_Supervisor.cfg.frameskipConfig;
     if (500 <= curTime - g_LastTime)
     {
-        elapsed = (curTime - g_LastTime) / 1000.f;
+        float elapsed = (curTime - g_LastTime) / 1000.f;
         fps = g_NumFramesSinceLastTime / elapsed;
         g_LastTime = curTime;
         g_NumFramesSinceLastTime = 0;
-        sprintf(g_FpsCounterBuffer, "%.02ffps", fps);
-        if (g_GameManager.isInMenu != 0)
-        {
-            framerate = 60.f / g_Supervisor.framerateMultiplier;
-            g_Supervisor.unk1b8 = g_Supervisor.unk1b8 + framerate;
-
-            if (framerate * .89999998f < fps)
-                g_Supervisor.unk1b4 = g_Supervisor.unk1b4 + framerate;
-            else if (framerate * 0.69999999f < fps)
-                g_Supervisor.unk1b4 = framerate * .8f + g_Supervisor.unk1b4;
-            else if (framerate * 0.5f < fps)
-                g_Supervisor.unk1b4 = framerate * .6f + g_Supervisor.unk1b4;
-            else
-                g_Supervisor.unk1b4 = framerate * .5f + g_Supervisor.unk1b4;
-        }
-    }
-    if (!g_Supervisor.isInEnding)
-    {
-        fpsCounterPos.x = 512.0;
-        fpsCounterPos.y = 464.0;
-        fpsCounterPos.z = 0.0;
-        g_AsciiManager.AddString(&fpsCounterPos, g_FpsCounterBuffer);
+        sprintf(g_FpsCounterBuffer, "FPS: %.02f", fps);
+        ZunVec3 fpsPos = {10.0f, 40.0f, 0.0f};
+        g_AsciiManager.AddString(&fpsPos, g_FpsCounterBuffer);
     }
     return;
 }

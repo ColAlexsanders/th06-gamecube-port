@@ -1,5 +1,8 @@
 #include "platform.h"
 #include <cstdio>
+#include <cstring>
+#include <fat.h>
+#include <unistd.h>
 
 #include "AnmManager.hpp"
 #include "Chain.hpp"
@@ -13,12 +16,64 @@
 #include "i18n.hpp"
 #include "utils.hpp"
 
+// chdir into the directory holding the assets so relative paths (TH_*_DAT_FILE,
+// TH_CONFIG_FILE, bgm/...) resolve. GameCube passes no argv, so fall back to
+// the conventional app directory on the SD/SDGecko mount.
+//    Right now it just returns with no asset dir found, but it'll be important later
+//    for swiss support
+
+
+static void ChangeToAssetDirectory(int argc, char *argv[])
+{
+    if (argc > 0 && argv != NULL && argv[0] != NULL)
+    {
+        const char *lastSlash = std::strrchr(argv[0], '/');
+        const size_t length = lastSlash ? (size_t)(lastSlash - argv[0]) : 0;
+        if (length > 0 && length < 1024)
+        {
+            char directory[1024];
+            std::memcpy(directory, argv[0], length);
+            directory[length] = '\0';
+            if (chdir(directory) == 0)
+                return;
+        }
+    }
+
+    static const char *fallbackDirectories[] = {
+        // Relative paths resolve against libfat's default device set by fatInitDefault()
+        "apps/th06", "th06",
+        // GameCube SD Gecko is mounted as carda:/cardb: (no sd: on GameCube)
+        "carda:/apps/th06", "carda:", "cardb:/apps/th06", "cardb:"};
+    for (size_t i = 0; i < sizeof(fallbackDirectories) / sizeof(fallbackDirectories[0]); i++)
+    {
+        if (chdir(fallbackDirectories[i]) == 0)
+        {
+            utils::DebugPrint("Assets dir: %s", fallbackDirectories[i]);
+            return;
+        }
+    }
+    utils::DebugPrint("Warning: no asset directory found");
+}
+
 int main(int argc, char *argv[])
 {
-    (void)argc;
-    (void)argv;
-
     i32 renderResult = 0;
+
+    utils::DebugPrint("=== TH06 GameCube Port Starting ===");
+    utils::DebugPrint("argc=%d, argv=%p", argc, (void*)argv);
+
+    // Mount the filesystem (SD Gecko / SD2SP2). Not fatal: the assets are
+    // embedded, so the game runs without a filesystem; saves/logs just won't persist.
+    if (!fatInitDefault())
+    {
+        utils::DebugPrint("WARNING: fatInitDefault() failed - no SD card mounted");
+    }
+    ChangeToAssetDirectory(argc, argv);
+
+    // Early platform initialization check
+    platform_initDisplay();
+    utils::DebugPrint("Platform init done");
+
     //    MSG msg;
     //    i32 waste1, waste2, waste3, waste4, waste5, waste6;
 
@@ -33,9 +88,11 @@ int main(int argc, char *argv[])
 
     if (g_Supervisor.LoadConfig(TH_CONFIG_FILE) != ZUN_SUCCESS)
     {
+        utils::DebugPrint("Failed to load config");
         g_GameErrorContext.Flush();
         return -1;
     }
+    utils::DebugPrint("Config loaded successfully");
 
     //    if (GameWindow::InitD3dInterface())
     //    {
@@ -52,23 +109,30 @@ int main(int argc, char *argv[])
 
 restart:
     GameWindow::CreateGameWindow();
+    utils::DebugPrint("GameWindow created");
 
     g_AnmManager = new AnmManager();
+    utils::DebugPrint("AnmManager created: %p", (void*)g_AnmManager);
 
     if (GameWindow::InitD3dRendering() != ZUN_SUCCESS)
     {
+        utils::DebugPrint("Failed to init rendering");
         g_GameErrorContext.Flush();
         return 1;
     }
+    utils::DebugPrint("Rendering initialized");
 
     g_SoundPlayer.InitializeDSound();
+    utils::DebugPrint("SoundPlayer initialized");
     Controller::GetJoystickCaps();
     Controller::ResetKeyboard();
 
     if (Supervisor::RegisterChain() != ZUN_SUCCESS)
     {
+        utils::DebugPrint("Failed to register supervisor chain");
         goto stop;
     }
+    utils::DebugPrint("Supervisor chain registered");
     if (!g_Supervisor.cfg.windowed)
     {
         // Cursor handling - no-op for GameCube

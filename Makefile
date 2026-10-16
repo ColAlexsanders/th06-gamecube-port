@@ -12,9 +12,17 @@ endif
 
 include $(DEVKITPPC)/gamecube_rules
 
+#---------------------------------------------------------------------------------
 # Override to use libogc2 instead of libogc
+#---------------------------------------------------------------------------------
 export LIBOGC_INC := /opt/devkitpro/libogc2/gamecube/include
 export LIBOGC_LIB := /opt/devkitpro/libogc2/gamecube/lib
+
+#---------------------------------------------------------------------------------
+# Match the flags libogc2 and libfat were built with, so their small-data accesses
+# (r2/r13 relative) have valid base registers set up by the CRT.
+#---------------------------------------------------------------------------------
+MACHDEP += -mcall-sysv -msdata=sysv
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
@@ -24,9 +32,9 @@ export LIBOGC_LIB := /opt/devkitpro/libogc2/gamecube/lib
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source/game/modified source/platform source/game/modified/graphics source/game/modified/midi source/game/modified/pbg3 source/game/modified/thirdparty
+SOURCES		:=	source/game/modified source/platform source/game/modified/graphics source/game/modified/midi source/game/modified/pbg3 source/game/modified/thirdparty source/platform/gx
 DATA		:=	data  
-INCLUDES	:=	source/platform
+INCLUDES	:=	source/platform source/game/modified source/platform/gx
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -40,7 +48,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-logc -lm
+LIBS	:=	-lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -71,6 +79,9 @@ sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
+# Exclude desktop OpenGL implementations for GameCube port
+CPPFILES := $(filter-out FixedFunctionGL.cpp Software.cpp WebGL.cpp GLFunc.cpp MidiAlsa.cpp MidiCoreAudio.cpp MidiWin32.cpp,$(CPPFILES))
+
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
 #---------------------------------------------------------------------------------
@@ -80,9 +91,11 @@ else
 	export LD	:=	$(CXX)
 endif
 
-export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
-					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
-					$(sFILES:.s=.o) $(SFILES:.S=.o)
+export OFILES_BIN	:=	$(addsuffix .o,$(BINFILES))
+export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(sFILES:.s=.o) $(SFILES:.S=.o)
+export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
+
+export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
 
 #---------------------------------------------------------------------------------
 # build a list of include paths
@@ -117,10 +130,20 @@ else
 DEPENDS	:=	$(OFILES:.o=.d)
 
 #---------------------------------------------------------------------------------
+# This rule links in binary data with the .dat extension
+#---------------------------------------------------------------------------------
+%.dat.o	%_dat.h :	%.dat
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	$(bin2o)
+
+#---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).dol: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
+
+$(OFILES_SOURCES) : $(HFILES)
 
 -include $(DEPENDS)
 

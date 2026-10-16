@@ -6,9 +6,6 @@
 #include "Stage.hpp"
 #include "Supervisor.hpp"
 #include "ZunMath.hpp"
-#include "graphics/FixedFunctionGL.hpp"
-#include "graphics/Software.hpp"
-#include "graphics/WebGL.hpp"
 #include "i18n.hpp"
 #include "utils.hpp"
 
@@ -20,14 +17,6 @@ i32 g_TickCountToEffectiveFramerate;
 f64 g_LastFrameTime;
 
 #define FRAME_TIME (1000. / 60.)
-
-static const struct
-{
-    const char *name;
-    GfxInterface *(*TryInit)();
-} s_RenderBackends[] = {{"GL 2.1 / GL ES 2.0 / WebGL", WebGL::Create},
-                        {"Fixed function GL(ES)", FixedFunctionGL::Init},
-                        {"Software fallback (VERY SLOW)", Software::Init}};
 
 RenderResult GameWindow::Render()
 {
@@ -53,11 +42,13 @@ void GameWindow::Present()
 
 void GameWindow::CreateGameWindow()
 {
+    utils::DebugPrint("GameWindow::CreateGameWindow called");
     platform_initDisplay();
 }
 
 ZunResult GameWindow::InitD3dRendering()
 {
+    utils::DebugPrint("GameWindow::InitD3dRendering called");
     platform_initRenderer();
     return ZUN_SUCCESS;
 }

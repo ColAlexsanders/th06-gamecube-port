@@ -167,3 +167,122 @@ void AnmManager::SetupVertexBuffer()
 {
     // Setup vertex buffer stub
 }
+
+// --- Missing function stubs for GameCube port ---
+
+ZunResult AnmManager::DrawNoRotation(const AnmVm *vm)
+{
+    // Draw no rotation stub - sprite rendering deferred to GX backend
+    (void)vm;
+    return ZUN_SUCCESS;
+}
+
+void AnmManager::FlushVertexBuffer()
+{
+    // Flush vertex buffer stub
+}
+
+void AnmManager::CopySurfaceToBackBuffer(i32 surfaceIdx, i32 left, i32 top, i32 x, i32 y)
+{
+    // Copy surface to back buffer stub
+    (void)surfaceIdx;
+    (void)left;
+    (void)top;
+    (void)x;
+    (void)y;
+}
+
+void AnmManager::UpdateDirtyStates()
+{
+    // Update dirty states stub
+}
+
+i32 AnmManager::ExecuteScript(AnmVm *vm)
+{
+    // Execute script stub - ANM script execution deferred
+    (void)vm;
+    return 0;
+}
+
+void AnmManager::DrawVmTextFmt(AnmVm *vm, ZunColor textColor, ZunColor shadowColor, const char *fmt, ...)
+{
+    // Draw VM text format stub - text rendering deferred to bitmap font system
+    (void)vm;
+    (void)textColor;
+    (void)shadowColor;
+    (void)fmt;
+}
+
+void AnmManager::DrawStringFormat2(AnmVm *vm, ZunColor textColor, ZunColor shadowColor, const char *fmt, ...)
+{
+    // Draw string format stub - text rendering deferred to bitmap font system
+    (void)vm;
+    (void)textColor;
+    (void)shadowColor;
+    (void)fmt;
+}
+
+ZunResult AnmManager::SetActiveSprite(AnmVm *vm, u32 spriteIdx)
+{
+    // Set active sprite stub - sprite loading deferred
+    (void)vm;
+    (void)spriteIdx;
+    return ZUN_SUCCESS;
+}
+
+void AnmManager::SetAndExecuteScript(AnmVm *vm, const AnmRawInstr *beginingOfScript)
+{
+    // Set and execute script stub - ANM script execution deferred
+    (void)vm;
+    (void)beginingOfScript;
+}
+
+ZunResult AnmManager::Draw(const AnmVm *vm)
+{
+    // Draw stub - sprite rendering deferred to GX backend
+    (void)vm;
+    return ZUN_SUCCESS;
+}
+
+void AnmManager::CopySurfaceRectToBackBuffer(i32 surfaceIdx, i32 rectX, i32 rectY, i32 rectLeft, i32 rectTop, i32 width, i32 height)
+{
+    // Copy surface rect to back buffer stub
+    (void)surfaceIdx;
+    (void)rectX;
+    (void)rectY;
+    (void)rectLeft;
+    (void)rectTop;
+    (void)width;
+    (void)height;
+}
+
+ZunResult AnmManager::DrawFacingCamera(const AnmVm *vm)
+{
+    // Draw facing camera stub - sprite rendering deferred to GX backend
+    (void)vm;
+    return ZUN_SUCCESS;
+}
+
+ZunResult AnmManager::Draw2(const AnmVm *vm)
+{
+    // Draw2 stub - sprite rendering deferred to GX backend
+    (void)vm;
+    return ZUN_SUCCESS;
+}
+
+ZunResult AnmManager::Draw3(const AnmVm *vm)
+{
+    // Draw3 stub - sprite rendering deferred to GX backend
+    (void)vm;
+    return ZUN_SUCCESS;
+}
+
+void AnmManager::DrawStringFormat(AnmVm *vm, ZunColor textColor, ZunColor shadowColor, const char *fmt, ...)
+{
+    // Draw string format stub - text rendering deferred to bitmap font system
+    (void)vm;
+    (void)textColor;
+    (void)shadowColor;
+    (void)fmt;
+}
+

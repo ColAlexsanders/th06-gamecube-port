@@ -1,7 +1,11 @@
 #include "platform.h"
 
 // --- Display ---
-void platform_initDisplay(void)     {  }
+void platform_initDisplay(void)
+{
+    // For GameCube, we'll use GX backend which is initialized later
+    // This is just a placeholder for now
+}
 void platform_swapBuffers(void)     {  }
 void platform_shutdownDisplay(void) {  }
 void platform_initRenderer(void)    {  }
